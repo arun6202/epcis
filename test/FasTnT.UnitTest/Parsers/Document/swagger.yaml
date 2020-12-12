@@ -1,0 +1,3156 @@
+openapi: "3.0.0"
+info:
+  version: '2.0.0'
+  title: IBM Food Trust Trace API
+  description: |
+    API results are cached after the first invocation for the query parameters provided.  To bypass the API caching and refresh the cached result, pass in the header `X-ApiCache-Bypass: true`
+
+    ## Authorization to use the Trace API
+    Only authorized users with a registered IBMid can make API calls. If necessary, contact your organization administrator for authorization to use this API.
+    Authenticate to use the Trace API with your registered IBMid, as follows:
+    1. Open the [IBM Blockchain Solution Manager](/ift/api/identity-proxy/login) page in a new tab or window.
+    2. Log in with your IBMid, and if necessary, select your organization.
+    3. Click **Copy** to copy your user token.
+    4. Return to this page and click the green **Authorize** button on the lower right.
+    5. In the **Available authorizations** dialog, paste your copied user token into the **Value** field.
+    6. Click **Authorize** and **Close**.
+    You are now authorized to use the API. For subsequent sessions, repeat the steps above to obtain and use a new user
+    token.
+    
+  x-service-version: '0.0.0'
+servers:
+  - url: '/ift/api/outbound/v2'
+tags:
+  - name: Products
+    description: APIs for products
+  - name: Locations
+    description: APIs for locations
+  - name: Payloads
+    description: APIS for payloads
+  - name: Events
+    description: APIs for events
+  - name: Lots and Serials
+    description: APIs for lots and serials
+  - name: EPCs
+    description: APIs for EPCs
+  - name: Transactions
+    description: APIs for Transactions
+  - name: Organizations
+    description: APIs for Organizations
+  - name: Sources
+    description: APIs for sources
+paths:
+  /products:
+    get:
+      tags:
+        - Products
+      description: |
+        Retrieves Master Item Data product information
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/description'
+        - $ref: '#/components/parameters/lotOrSerialIdWithoutGrai'
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/products'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Products
+      description: |
+        Retrieves Master Item Data product information
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/productsPostRequest'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/products'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /locations:
+    get:
+      tags:
+        - Locations
+      description: |
+        Retrieves Master Facility Data location information
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/locationIdAllowSGLN'
+        - $ref: '#/components/parameters/partyRoleCode'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/locations'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Locations
+      description: |
+        Retrieves Master Facility Data location information
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/locationsPostRequest'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/locations'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /lots_and_serials:
+    get:
+      tags:
+        - Lots and Serials
+      description: |
+        Finds product lots and serials. If only limit and/or start query parameter is provided, the response will be an empty list.
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/lotOrSerialId'
+        - $ref: '#/components/parameters/eventStartTimestamp'
+        - $ref: '#/components/parameters/eventEndTimestamp'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lotsSerials'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Lots and Serials
+      description: |
+        Finds product lots and serials. If only limit and/or start query parameter is provided, the response will be an empty list.
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/lotsAndSerialsPostRequest'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lotsSerials'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /ilmds:
+    get:
+      tags:
+        - Lots and Serials
+      description: |
+        Retrieves ILMD data submitted about lots and serials
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/lotOrSerialOrSsccId'
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/bestBeforeDateStarttimestamp'
+        - $ref: '#/components/parameters/bestBeforeDateEndtimestamp'
+        - $ref: '#/components/parameters/firstFreezeDateStartTimestamp'
+        - $ref: '#/components/parameters/firstFreezeDateEndTimestamp'
+        - $ref: '#/components/parameters/harvestStartDateStartTimestamp'
+        - $ref: '#/components/parameters/harvestStartDateEndTimestamp'
+        - $ref: '#/components/parameters/harvestEndDateStartTimestamp'
+        - $ref: '#/components/parameters/harvestEndDateEndTimestamp'
+        - $ref: '#/components/parameters/itemExpirationDateStartTimestamp'
+        - $ref: '#/components/parameters/itemExpirationDateEndTimestamp'
+        - $ref: '#/components/parameters/sellByDateStartTimestamp'
+        - $ref: '#/components/parameters/sellByDateEndTimestamp'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses:
+        '200':
+          description: ilmd data matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ilmds'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Lots and Serials
+      description: |
+        Retrieves ILMD data submitted about lots and serials.
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ilmdsPostRequest'
+      responses:
+        '200':
+          description: ilmd data matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ilmds'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /payloads:
+    get:
+      tags:
+        - Payloads
+      description: |
+        Retrieves payloads
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/payloadId'
+        - $ref: '#/components/parameters/epcIdForPayloads'
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/locationIdAllowSGLN'
+        - $ref: '#/components/parameters/eventId'
+        - $ref: '#/components/parameters/payloadTypeUri'
+        - $ref: '#/components/parameters/payloadStartTimestamp'
+        - $ref: '#/components/parameters/payloadEndTimestamp'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payloads'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Payloads
+      description: |
+        Retrieves payloads
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payloadsPostRequest'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payloads'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /events:
+    get:
+      tags:
+        - Events
+      description: |
+        Retrieves events
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/assetId'
+        - $ref: '#/components/parameters/epcId'
+        - $ref: '#/components/parameters/parentEpcId'
+        - $ref: '#/components/parameters/locationIdAllowSGLN'
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/eventId'
+        - $ref: '#/components/parameters/eventType'
+        - $ref: '#/components/parameters/bizTransactionId'
+        - $ref: '#/components/parameters/bizTransactionType'
+        - $ref: '#/components/parameters/bizStep'
+        - $ref: '#/components/parameters/eventStartTimestamp'
+        - $ref: '#/components/parameters/eventEndTimestamp'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/events'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+        tags:
+          - Events
+        description: |
+          Retrieves events
+
+          request body array properties can contain a maximum number of 200 items
+        requestBody:
+          description: "Optional request body for restricting results.  All properties are optional"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventsPostRequest'
+        responses: 
+          '200': 
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/events'
+          '400':
+            description: bad input parameter
+            content:
+              application/json:
+                type: array
+                schema:
+                  $ref: '#/components/schemas/errorModel'
+  /epcs/{epc_id}/trace:
+    get:
+      tags:
+        - EPCs
+      summary: retrieve a trace for a specific lot, serial, or pallet
+      description: |
+        Retrieve a consumer trace for a specific lot, serial, or pallet
+        
+        EPC's may be encountered more than once in a Trace API call return. In order to reduce the return size, duplicate EPC's are marked as `"abbreviated": true` and only one is expanded.
+
+        Depth is a zero-based index for the number of recursive queries required to build a trace. The initial query (depth 0) looks for all events where the traced EPC ID exists as a parent, child, input, or output. The returned asset IDs and EPC IDs are inserted into the trace at the first level. The next query (depth 1) then takes all returned EPC IDs from the previous query and searches for them as parents, children, inputs, and outputs. These asset IDs and EPC IDs are inserted into the trace at the next level. This process continues until either the depth is reached or there is no more data returned by the query.
+
+        The Trace API has a default depth of 5, and there is no upper limit on the depth value that can be specified. However, if a trace exceeds 500,000 contained EPC IDs, an error is returned and a lower depth should be specified on the next request. The EPC (epc_id) endpoints have a depth of 5, which cannot be changed.
+
+        A trace level may consist of any of these events:
+        1. The transformation from one EPC to another (inputs to outputs)
+        2. One or more child EPCs being aggregated into a parent
+        3. One parent being disaggregated into one or more children EPCs
+
+        Array parameters can contain a maximum number of 30 items
+
+      parameters:
+        - name: epc_id
+          in: path
+          description: EPC of lot, serial, pallet, or GRAI to trace
+          required: true
+          schema:
+            type: string
+        - name: product_id[]
+          in: query
+          description: restrict the EPC's on the first trace level to any of the GS1 GTINs (numeric) or IBM Food Trust Product Identifiers (URN) provided. All subsequent trace levels will not be restricted by this parameter.
+          required: false
+          schema:
+            $ref: '#/components/schemas/productId'
+        - name: depth
+          in: query
+          description: number of steps to traverse
+          schema:
+            type: integer
+            minimum: 1
+            default: 5
+            maximum: 10
+        - name: upstream
+          in: query
+          description: whether or not to trace upstream
+          schema:
+            type: boolean
+            default: true
+        - name: downstream
+          in: query
+          description: whether or not to trace downstream
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    $ref: '#/components/schemas/trace'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - EPCs
+      summary: retrieve a trace for a specific lot, serial, or pallet
+      description: |
+        Retrieve a consumer trace for a specific lot, serial, or pallet
+        
+        EPC's may be encountered more than once in a Trace API call return. In order to reduce the return size, duplicate EPC's are marked as `"abbreviated": true` and only one is expanded.
+
+        Depth is a zero-based index for the number of recursive queries required to build a trace. The initial query (depth 0) looks for all events where the traced EPC ID exists as a parent, child, input, or output. The returned asset IDs and EPC IDs are inserted into the trace at the first level. The next query (depth 1) then takes all returned EPC IDs from the previous query and searches for them as parents, children, inputs, and outputs. These asset IDs and EPC IDs are inserted into the trace at the next level. This process continues until either the depth is reached or there is no more data returned by the query.
+
+        The Trace API has a default depth of 5, and there is no upper limit on the depth value that can be specified. However, if a trace exceeds 500,000 contained EPC IDs, an error is returned and a lower depth should be specified on the next request. The EPC (epc_id) endpoints have a depth of 5, which cannot be changed.
+
+        A trace level may consist of any of these events:
+        1. The transformation from one EPC to another (inputs to outputs)
+        2. One or more child EPCs being aggregated into a parent
+        3. One parent being disaggregated into one or more children EPCs
+
+        request body array properties can contain a maximum number of 200 items
+
+      requestBody:
+        description: "Required request body for restricting results.  epc_id is required and all other properties are optional"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                epc_id:
+                  description: EPC of lot, serial, pallet, or GRAI to trace
+                  type: string
+                  required: true
+                product_id[]:
+                  description: restrict the EPC's on the first trace level to any of the GS1 GTINs (numeric) or IBM Food Trust Product Identifiers (URN) provided. All subsequent trace levels will not be restricted by this parameter.
+                  $ref: '#/components/schemas/productId'
+                depth:
+                  description: number of steps to traverse
+                  type: integer
+                  minimum: 1
+                  default: 5
+                upstream:
+                  description: whether or not to trace upstream
+                  type: boolean
+                  default: true   
+                downstream:
+                  description: whether or not to trace downstream
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    $ref: '#/components/schemas/trace'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /epcs/{epc_id}/trace/consumer:
+    get:
+      tags:
+        - EPCs
+      summary: retrieve a consumer trace for a specific lot, serial, or pallet
+      description: |
+        This endpoint combines information from /trace (with `depth` value of 5), /products, /locations, /payloads, /events, /lots_and_serials endpoints and returns the information in a single response.  The number of records returned is determined by the default value from the `limit` parameter of the corresponding endpoint.<br><br>Payloads are limited to those that specify epc id and/or event id values returned by the corresponding trace.  Use the /payloads endpoint for more granular payloads queries.</br></br>
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - name: epc_id
+          in: path
+          description: EPC of lot, serial, pallet or GRAI to trace
+          required: true
+          schema:
+            type: string
+        - name: include_events
+          in: query
+          description: whether or not to include events in the return
+          schema:
+            type: boolean
+            default: true
+        - name: include_products
+          in: query
+          description: whether or not to include Products in the return
+          schema:
+            type: boolean
+            default: true
+        - name: include_lots_and_serials
+          in: query
+          description: whether or not to include LotsAndSerials in the return
+          schema:
+            type: boolean
+            default: true
+        - name: include_locations
+          in: query
+          description: whether or not to include Locations in the return
+          schema:
+            type: boolean
+            default: true
+        - name: include_trace
+          in: query
+          description: whether or not to include Trace in the return
+          schema:
+            type: boolean
+            default: true
+        - name: include_payloads
+          in: query
+          description: whether or not to include Payloads in the return
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/consumerTrace'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - EPCs
+      summary: retrieve a consumer trace for a specific lot, serial, or pallet
+      description:  |
+        This endpoint combines information from /trace (with `depth` value of 5), /products, /locations, /payloads, /events, /lots_and_serials endpoints and returns the information in a single response.  The number of records returned is determined by the default value from the `limit` parameter of the corresponding endpoint.<br><br>Payloads are limited to those that specify epc id and/or event id values returned by the corresponding trace.  Use the /payloads endpoint for more granular payloads queries.</br></br>
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Required request body for restricting results.  epc_id is required and all other properties are optional"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                epc_id:
+                  description: EPC of lot, serial, pallet, or GRAI to trace
+                  type: string
+                  required: true
+                include_events:
+                  description: whether or not to include events in the return
+                  type: boolean
+                  default: true
+                include_products:
+                  description: whether or not to include Products in the return
+                  type: boolean
+                  default: true
+                include_lots_and_serials:
+                  description: whether or not to include LotsAndSerials in the return
+                  type: boolean
+                  default: true
+                include_locations:
+                  description: whether or not to include Locations in the return
+                  type: boolean
+                  default: true
+                include_trace:
+                  description: whether or not to include Trace in the return
+                  type: boolean
+                  default: true
+                include_payloads:
+                  description: whether or not to include Payloads in the return
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/consumerTrace'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /transactions/purchase_orders:
+    get:
+      tags:
+        - Transactions
+      summary: Retrieves purchase order information
+      description: |
+        Retrieves purchase order information
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/orderTypeCode'
+        - $ref: '#/components/parameters/documentActionCode'
+        - $ref: '#/components/parameters/lineItemReferencedOrderId'
+        - $ref: '#/components/parameters/shipToLocationId'
+        - $ref: '#/components/parameters/shipFromLocationId'
+        - $ref: '#/components/parameters/isReturnOrder'
+        - $ref: '#/components/parameters/creationStartTimestamp'
+        - $ref: '#/components/parameters/creationEndTimestamp'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/start'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/purchaseOrders'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Transactions
+      summary: Retrieves purchase order information
+      description: |
+        Retrieves purchase order information
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/purchaseOrderPostRequest'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/purchaseOrders'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /transactions/despatch_advices:
+    get:
+      tags:
+        - Transactions
+      summary: Retrieves despatch advice information
+      description: |
+        Retrieves despatch advice information
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/purchaseOrderId'
+        - $ref: '#/components/parameters/invoiceId'
+        - $ref: '#/components/parameters/logisticUnitId'
+        - $ref: '#/components/parameters/billOfLadingNumber'
+        - $ref: '#/components/parameters/transportMeansId'
+        - $ref: '#/components/parameters/shipToLocationId'
+        - $ref: '#/components/parameters/shipFromLocationId'
+        - $ref: '#/components/parameters/consigneeLocationId'
+        - $ref: '#/components/parameters/creationStartTimestamp'
+        - $ref: '#/components/parameters/creationEndTimestamp'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/despatchAdvices'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Transactions
+      summary: Retrieves despatch advice information
+      description: |
+        Retrieves despatch advice information
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/despatchAdvicesPostRequest'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/despatchAdvices'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /transactions/receive_advices:
+    get:
+      tags:
+        - Transactions
+      summary: Retrieves receive advice information
+      description: |
+        Retrieves receive advice information
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/purchaseOrderId'
+        - $ref: '#/components/parameters/despatchAdviceId'
+        - $ref: '#/components/parameters/logisticUnitId'
+        - $ref: '#/components/parameters/shipToLocationId'
+        - $ref: '#/components/parameters/shipFromLocationId'
+        - $ref: '#/components/parameters/transportMeansId'
+        - $ref: '#/components/parameters/billOfLadingNumber'
+        - $ref: '#/components/parameters/creationStartTimestamp'
+        - $ref: '#/components/parameters/creationEndTimestamp'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/receiveAdvices'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Transactions
+      summary: Retrieves receive advice information
+      description: |
+        Retrieves receive advice information
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/receiveAdvicesPostRequest'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/receiveAdvices'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /transactions/invoices:
+    get:
+      tags:
+        - Transactions
+      summary: Retrieves invoice information
+      description: |
+        Retrieves invoice information
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/transactionId'
+        - $ref: '#/components/parameters/invoiceType'
+        - $ref: '#/components/parameters/purchaseOrderId'
+        - $ref: '#/components/parameters/despatchAdviceId'
+        - $ref: '#/components/parameters/buyerLocationId'
+        - $ref: '#/components/parameters/sellerLocationId'
+        - $ref: '#/components/parameters/payerLocationId'
+        - $ref: '#/components/parameters/payeeLocationId'        
+        - $ref: '#/components/parameters/creationStartTimestamp'
+        - $ref: '#/components/parameters/creationEndTimestamp'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invoices'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Transactions
+      summary: Retrieves invoice information
+      description: |
+        Retrieves invoice information
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/invoicesPostRequest'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invoices'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  /sources:
+    get:
+      tags:
+        - Sources
+      summary: retrieve source material
+      description: |
+        This endpoint allows the retrieval of source materials that were ingested to create assets. If an asset does not have a source, a null value will be returned in the hash field.
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/assetIdSizeRestricted30'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sources'
+    post:
+      tags:
+        - Sources
+      summary: retrieve source material
+      description: |
+        This endpoint allows the retrieval of source materials that were ingested to create assets. If an asset does not have a source, a null value will be returned in the hash field.
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/sourcesPostRequest'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sources'
+  /organizations:
+    get:
+      tags:
+        - Organizations
+      description: |
+        Retrieves information for organizations.  If only organization ID or name is provided, the response will only contain ID and name information.  If only limit and/or start query parameter is provided, the response will be an empty list.
+
+        Array parameters can contain a maximum number of 30 items
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/orgName'        
+        - $ref: '#/components/parameters/companyPrefix'
+        - $ref: '#/components/parameters/epcId'
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/locationId'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/start'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organizations'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+    post:
+      tags:
+        - Organizations
+      description: |
+        Retrieves information for organizations.  If only organization ID or name is provided, the response will only contain ID and name information.  If only limit and/or start query parameter is provided, the response will be an empty list.
+
+        request body array properties can contain a maximum number of 200 items
+      requestBody:
+        description: "Optional request body for restricting results.  All properties are optional"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organizationsPostRequest'
+      responses: 
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organizations'
+        '400':
+          description: bad input parameter
+          content:
+            application/json:
+              type: array
+              schema:
+                $ref: '#/components/schemas/errorModel'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    limit:
+      name: limit
+      in: query
+      description:
+        $ref: '#/components/descriptions/limit'
+      schema:
+        $ref: '#/components/schemas/limit'
+    offset:
+      name: offset
+      in: query
+      description:
+        $ref: '#/components/descriptions/offset'
+      schema:
+        $ref: '#/components/schemas/offset'
+    start:
+      name: start
+      in: query
+      description:
+        $ref: '#/components/descriptions/start'
+      schema:
+        $ref: '#/components/schemas/start'
+    orgId:
+      name: org_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/orgId'
+      schema:
+        $ref: '#/components/schemas/orgId'
+    orgName:
+      name: org_name[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/orgName'
+      schema:
+        $ref: '#/components/schemas/orgName'
+    companyPrefix:
+      name: company_prefix[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/companyPrefix'
+      schema:
+        $ref: '#/components/schemas/companyPrefix'
+    productId:
+      name: product_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/productId'
+      schema:
+        $ref: '#/components/schemas/productId'
+    payloadId:
+      name: payload_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/payloadId'
+      schema:
+        $ref: '#/components/schemas/payloadId'
+    lotOrSerialIdWithoutGrai:
+      name: lot_or_serial_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/lotOrSerialIdWithoutGrai'
+      schema:
+        $ref: '#/components/schemas/lotOrSerialIdWithoutGrai'
+    lotOrSerialId:
+      name: lot_or_serial_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/lotOrSerialId'
+      schema:
+        $ref: '#/components/schemas/lotOrSerialId'
+    lotOrSerialOrSsccId:
+      name: lot_or_serial_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/lotOrSerialOrSsccId'
+      schema:
+        $ref: '#/components/schemas/lotOrSerialId'
+    locationId:
+      name: location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationId'
+      schema:
+        $ref: '#/components/schemas/locationId'
+    shipToLocationId:
+      name: ship_to_location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationId'
+      schema:
+        $ref: '#/components/schemas/shipToLocationId'
+    shipFromLocationId:
+      name: ship_from_location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationId'
+      schema:
+        $ref: '#/components/schemas/shipFromLocationId'
+    consigneeLocationId:
+      name: consignee_location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationId'
+      schema:
+        $ref: '#/components/schemas/consigneeLocationId'
+    locationIdAllowSGLN:
+      name: location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationIdAllowSGLN'
+      schema:
+        $ref: '#/components/schemas/locationIdAllowSGLN'
+    buyerLocationId:
+      name: buyer_location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationId'
+      schema:
+        $ref: '#/components/schemas/buyerLocationId'
+    sellerLocationId:
+      name: seller_location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationId'
+      schema:
+        $ref: '#/components/schemas/sellerLocationId'
+    payerLocationId:
+      name: payer_location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationId'
+      schema:
+        $ref: '#/components/schemas/payerLocationId'
+    payeeLocationId:
+      name: payee_location_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/locationId'
+      schema:
+        $ref: '#/components/schemas/payeeLocationId'
+    epcId:
+      name: epc_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/epcId'
+      schema:
+        $ref: '#/components/schemas/epcId'
+    epcIdForPayloads:
+      name: epc_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/epcIdForPayloads'
+      schema:
+        $ref: '#/components/schemas/epcIdForPayloads'
+    parentEpcId:
+      name: parent_epc_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/parentEpcId'
+      schema:
+        $ref: '#/components/schemas/parentEpcId'
+    eventId:
+      name: event_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/eventId'
+      schema:
+        $ref: '#/components/schemas/eventId'
+    description:
+      name: description
+      in: query
+      description:
+        $ref: '#/components/descriptions/description'
+      schema:
+        $ref: '#/components/schemas/description'
+    payloadTypeUri:
+      name: payload_type_uri[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/payloadTypeUri'
+      schema:
+        $ref: '#/components/schemas/payloadTypeUri'
+    payloadStartTimestamp:
+      name: payload_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/payloadStartTimestamp'
+      schema:
+        $ref: '#/components/schemas/payloadStartTimestamp'
+    payloadEndTimestamp:
+      name: payload_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/payloadEndTimestamp'
+      schema:
+        $ref: '#/components/schemas/payloadEndTimestamp'
+    partyRoleCode:
+      name: party_role_code[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/partyRoleCode'
+      schema:
+        $ref: '#/components/schemas/partyRoleCode'
+    assetId:
+      name: asset_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/assetId'
+      schema: 
+        $ref: '#/components/schemas/assetId'
+    assetIdSizeRestricted30:
+      name: asset_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/assetIdSizeRestricted30'
+      required: true
+      schema: 
+        $ref: '#/components/schemas/assetIdSizeRestricted30'
+    assetIdSizeRestricted200:
+      name: asset_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/assetIdSizeRestricted200'
+      required: true
+      schema: 
+        $ref: '#/components/schemas/assetIdSizeRestricted200'
+    eventType:
+      name: event_type[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/eventType'
+      schema:
+        $ref: '#/components/schemas/eventType'
+    purchaseOrderId:
+      name: purchase_order_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/purchaseOrderId'
+      schema:
+        $ref: '#/components/schemas/purchaseOrderId'
+    invoiceId:
+      name: invoice_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/invoiceId'
+      schema:
+        $ref: '#/components/schemas/invoiceId'
+    billOfLadingNumber:
+      name: bill_of_lading_number[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/billOfLadingNumber'
+      schema:
+        $ref: '#/components/schemas/billOfLadingNumber'
+    transportMeansId:
+      name: transport_means_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/transportMeansId'
+      schema:
+        $ref: '#/components/schemas/transportMeansId'
+    despatchAdviceId:
+      name: despatch_advice_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/despatchAdviceId'
+      schema:
+        $ref: '#/components/schemas/despatchAdviceId'
+    transactionId:
+      name: transaction_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/transactionId'
+      schema:
+        $ref: '#/components/schemas/transactionId'
+    bizTransactionId:
+      name: biz_transaction_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/bizTransactionId'
+      schema:
+        $ref: '#/components/schemas/bizTransactionId'
+    bizTransactionType:
+      name: biz_transaction_type[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/bizTransactionType'
+      schema:
+        $ref: '#/components/schemas/bizTransactionType'
+    bizStep:
+      name: biz_step[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/bizStep'
+      schema:
+        $ref: '#/components/schemas/bizStep'
+    logisticUnitId:
+      name: logistic_unit_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/logisticUnitId'
+      schema:
+        $ref: '#/components/schemas/logisticUnitId'
+    orderTypeCode:
+      name: order_type_code[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/orderTypeCode'
+      schema:
+        $ref: '#/components/schemas/orderTypeCode'
+    documentActionCode:
+      name: document_action_code[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/documentActionCode'
+      schema:
+        $ref: '#/components/schemas/documentActionCode'
+    lineItemReferencedOrderId:
+      name: line_item_referenced_order_id[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/lineItemReferencedOrderId'
+      schema:
+        $ref: '#/components/schemas/lineItemReferencedOrderId'
+    eventStartTimestamp:
+      name: event_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/eventStartTimestamp'
+      schema:
+        $ref: '#/components/schemas/eventStartTimestamp'
+    eventEndTimestamp:
+      name: event_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/eventEndTimestamp'
+      schema:
+        $ref: '#/components/schemas/eventEndTimestamp'
+    creationStartTimestamp:
+      name: creation_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/creationStartTimestamp'
+      schema:
+        $ref: '#/components/schemas/creationStartTimestamp'
+    creationEndTimestamp:
+      name: creation_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/creationEndTimestamp'
+      schema:
+        $ref: '#/components/schemas/creationEndTimestamp'
+    bestBeforeDateStarttimestamp:
+      name: best_before_date_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/bestBeforeDateStarttimestamp'
+      schema:
+        $ref: '#/components/schemas/bestBeforeDateStarttimestamp'
+    bestBeforeDateEndtimestamp:
+      name: best_before_date_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/bestBeforeDateEndtimestamp'
+      schema:
+        $ref: '#/components/schemas/bestBeforeDateEndtimestamp'
+    firstFreezeDateStartTimestamp:
+      name: first_freeze_date_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/firstFreezeDateStartTimestamp'
+      schema:
+        $ref: '#/components/schemas/firstFreezeDateStartTimestamp'
+    firstFreezeDateEndTimestamp:
+      name: first_freeze_date_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/firstFreezeDateEndTimestamp'
+      schema:
+        $ref: '#/components/schemas/firstFreezeDateEndTimestamp'
+    harvestStartDateStartTimestamp:
+      name: harvest_start_date_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/harvestStartDateStartTimestamp'
+      schema:
+        $ref: '#/components/schemas/harvestStartDateStartTimestamp'
+    harvestStartDateEndTimestamp:
+      name: harvest_start_date_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/harvestStartDateEndTimestamp'
+      schema:
+        $ref: '#/components/schemas/harvestStartDateEndTimestamp'
+    harvestEndDateStartTimestamp:
+      name: harvest_end_date_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/harvestEndDateStartTimestamp'
+      schema:
+        $ref: '#/components/schemas/harvestEndDateStartTimestamp'
+    harvestEndDateEndTimestamp:
+      name: harvest_end_date_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/harvestEndDateEndTimestamp'
+      schema:
+        $ref: '#/components/schemas/harvestEndDateEndTimestamp'
+    itemExpirationDateStartTimestamp:
+      name: item_expiration_date_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/itemExpirationDateStartTimestamp'
+      schema:
+        $ref: '#/components/schemas/itemExpirationDateStartTimestamp'
+    itemExpirationDateEndTimestamp:
+      name: item_expiration_date_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/itemExpirationDateEndTimestamp'
+      schema:
+        $ref: '#/components/schemas/itemExpirationDateEndTimestamp'
+    sellByDateStartTimestamp:
+      name: sell_by_date_start_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/sellByDateStartTimestamp'
+      schema:
+        $ref: '#/components/schemas/sellByDateStartTimestamp'
+    sellByDateEndTimestamp:
+      name: sell_by_date_end_timestamp
+      in: query
+      description:
+        $ref: '#/components/descriptions/sellByDateEndTimestamp'
+      schema:
+        $ref: '#/components/schemas/sellByDateEndTimestamp'
+    invoiceType:
+      name: type[]
+      in: query
+      description:
+        $ref: '#/components/descriptions/invoiceType'
+      schema:
+        $ref: '#/components/schemas/invoiceType'
+    isReturnOrder:
+      name: is_return_order
+      in: query
+      description:
+        $ref: '#/components/descriptions/isReturnOrder'
+      schema:
+        $ref: '#/components/schemas/isReturnOrder'
+  schemas:
+    limit:
+      description:
+        $ref: '#/components/descriptions/limit'
+      type: number
+      default: 500
+    offset:
+      description:
+        $ref: '#/components/descriptions/offset'
+      type: number
+      default: 0
+    start:
+      description:
+        $ref: '#/components/descriptions/start'
+      type: string
+    orgId:
+      description:
+        $ref: '#/components/descriptions/orgId'
+      type: array
+      items:
+        type: string
+        format: uuid
+    orgName:
+      description:
+        $ref: '#/components/descriptions/orgName'
+      type: array
+      items:
+        type: string
+    companyPrefix:
+      description:
+        $ref: '#/components/descriptions/companyPrefix'
+      type: array
+      items:
+        type: string
+    purchaseOrderId:
+      description:
+        $ref: '#/components/descriptions/purchaseOrderId'
+      type: array
+      items:
+        type: string
+    invoiceId:
+      description:
+        $ref: '#/components/descriptions/invoiceId'
+      type: array
+      items:
+        type: string
+    billOfLadingNumber:
+      description:
+        $ref: '#/components/descriptions/billOfLadingNumber'
+      type: array
+      items:
+        type: string
+    transportMeansId:
+      description:
+        $ref: '#/components/descriptions/transportMeansId'
+      type: array
+      items:
+        type: string
+    despatchAdviceId:
+      description:
+        $ref: '#/components/descriptions/despatchAdviceId'
+      type: array
+      items:
+        type: string
+    invoiceType:
+      description:
+        $ref: '#/components/descriptions/invoiceType'
+      type: array
+      items:
+        type: string
+    transactionId:
+      description:
+        $ref: '#/components/descriptions/transactionId'
+      type: array
+      items:
+        type: string
+    productId:
+      description:
+        $ref: '#/components/descriptions/productId'
+      type: array
+      items:
+        type: string
+    locationId:
+      description:
+        $ref: '#/components/descriptions/locationId'
+      type: array
+      items:
+        type: string
+    shipToLocationId:
+      description:
+        $ref: '#/components/descriptions/locationId'
+      type: array
+      items:
+        type: string
+    shipFromLocationId:
+      description:
+        $ref: '#/components/descriptions/locationId'
+      type: array
+      items:
+        type: string
+    consigneeLocationId:
+      description:
+        $ref: '#/components/descriptions/locationId'
+      type: array
+      items:
+        type: string
+    buyerLocationId:
+      description:
+        $ref: '#/components/descriptions/locationId'
+      type: array
+      items:
+        type: string
+    sellerLocationId:
+      description:
+        $ref: '#/components/descriptions/locationId'
+      type: array
+      items:
+        type: string
+    payerLocationId:
+      description:
+        $ref: '#/components/descriptions/locationId'
+      type: array
+      items:
+        type: string
+    payeeLocationId:
+      description:
+        $ref: '#/components/descriptions/locationId'
+      type: array
+      items:
+        type: string
+    locationIdAllowSGLN:
+      description:
+        $ref: '#/components/descriptions/locationIdAllowSGLN'
+      type: array
+      items:
+        type: string
+    epcId:
+      description:
+        $ref: '#/components/descriptions/epcId'
+      type: array
+      items:
+        type: string
+    epcIdForPayloads:
+      description:
+        $ref: '#/components/descriptions/epcIdForPayloads'
+      type: array
+      items:
+        type: string
+    parentEpcId:
+      description:
+        $ref: '#/components/descriptions/parentEpcId'
+      type: array
+      items:
+        type: string
+    payloadId:
+      description:
+        $ref: '#/components/descriptions/payloadId'
+      type: array
+      items:
+        type: string
+    eventId:
+      description:
+        $ref: '#/components/descriptions/eventId'
+      type: array
+      items:
+        type: string
+    lotOrSerialId:
+      description:
+        $ref: '#/components/descriptions/lotOrSerialId'
+      type: array
+      items:
+        type: string
+        format: uri
+    lotOrSerialIdWithoutGrai:
+      description:
+        $ref: '#/components/descriptions/lotOrSerialIdWithoutGrai'
+      type: array
+      items:
+        type: string
+        format: uri
+    lotOrSerialOrSsccId:
+      description:
+        $ref: '#/components/descriptions/lotOrSerialOrSsccId'
+      type: array
+      items:
+        type: string
+        format: uri
+    description:
+      description:
+        $ref: '#/components/descriptions/description'
+      type: string
+    payloadTypeUri:
+      description:
+        $ref: '#/components/descriptions/payloadTypeUri'
+      type: array
+      items:
+        type: string
+    payloadStartTimestamp:
+      description:
+        $ref: '#/components/descriptions/payloadStartTimestamp'
+      type: string
+    payloadEndTimestamp:
+      description:
+        $ref: '#/components/descriptions/payloadEndTimestamp'
+      type: string
+    assetId:
+      description:
+        $ref: '#/components/descriptions/assetId'
+      type: array
+      items:
+        type: string
+    assetIdSizeRestricted30:
+      description:
+        $ref: '#/components/descriptions/assetIdSizeRestricted30'
+      type: array
+      items:
+        type: string
+      min: 1
+      max: 30
+    assetIdSizeRestricted200:
+      description:
+        $ref: '#/components/descriptions/assetIdSizeRestricted200'
+      type: array
+      items:
+        type: string
+      min: 1
+      max: 200
+    epcQty:
+      type: object
+      properties:
+        epc_id:
+          type: string
+        quantity:
+          type: number
+          format: float
+        uom:
+          type: string
+    eventStartTimestamp:
+      description:
+        $ref: '#/components/descriptions/eventStartTimestamp'
+      type: string
+    eventEndTimestamp:
+      description:
+        $ref: '#/components/descriptions/eventEndTimestamp'
+      type: string
+    creationStartTimestamp:
+      description:
+        $ref: '#/components/descriptions/creationStartTimestamp'
+      type: string
+    creationEndTimestamp:
+      description:
+        $ref: '#/components/descriptions/creationEndTimestamp'
+      type: string
+    bestBeforeDateStarttimestamp:
+      description:
+        $ref: '#/components/descriptions/bestBeforeDateStarttimestamp'
+      type: string
+    bestBeforeDateEndtimestamp:
+      description:
+        $ref: '#/components/descriptions/bestBeforeDateEndtimestamp'
+      type: string
+    firstFreezeDateStartTimestamp:
+      description:
+        $ref: '#/components/descriptions/firstFreezeDateStartTimestamp'
+      type: string
+    firstFreezeDateEndTimestamp:
+      description:
+        $ref: '#/components/descriptions/firstFreezeDateEndTimestamp'
+      type: string
+    harvestStartDateStartTimestamp:
+      description:
+        $ref: '#/components/descriptions/harvestStartDateStartTimestamp'
+      type: string
+    harvestStartDateEndTimestamp:
+      description:
+        $ref: '#/components/descriptions/harvestStartDateEndTimestamp'
+      type: string
+    harvestEndDateStartTimestamp:
+      description:
+        $ref: '#/components/descriptions/harvestEndDateStartTimestamp'
+      type: string
+    harvestEndDateEndTimestamp:
+      description:
+        $ref: '#/components/descriptions/harvestEndDateEndTimestamp'
+      type: string
+    itemExpirationDateStartTimestamp:
+      description:
+        $ref: '#/components/descriptions/itemExpirationDateStartTimestamp'
+      type: string
+    itemExpirationDateEndTimestamp:
+      description:
+        $ref: '#/components/descriptions/itemExpirationDateEndTimestamp'
+      type: string
+    sellByDateStartTimestamp:
+      description:
+        $ref: '#/components/descriptions/sellByDateStartTimestamp'
+      type: string
+    sellByDateEndTimestamp:
+      description:
+        $ref: '#/components/descriptions/sellByDateEndTimestamp'
+      type: string
+    isReturnOrder:
+      description:
+        $ref: '#/components/descriptions/isReturnOrder'
+      type: boolean
+    eventType:
+      description:
+        $ref: '#/components/descriptions/eventType'
+      type: array
+      items:
+        type: string
+    bizTransactionId:
+      description:
+        $ref: '#/components/descriptions/bizTransactionId'
+      type: array
+      items:
+        type: string
+    bizTransactionType:
+      description:
+        $ref: '#/components/descriptions/bizTransactionType'
+      type: array
+      items:
+        type: string
+    bizStep:
+      description:
+        $ref: '#/components/descriptions/bizStep'
+      type: array
+      items:
+        type: string
+    logisticUnitId:
+      description:
+        $ref: '#/components/descriptions/logisticUnitId'
+      type: array
+      items:
+        type: string
+    partyRoleCode:
+      description:
+        $ref: '#/components/descriptions/partyRoleCode'
+      type: array
+      items:
+        type: string
+    orderTypeCode:
+      description:
+        $ref: '#/components/descriptions/orderTypeCode'
+      type: array
+      items:
+        type: string
+    documentActionCode:
+      description:
+        $ref: '#/components/descriptions/documentActionCode'
+      type: array
+      items:
+        type: string
+    lineItemReferencedOrderId:
+      description:
+        $ref: '#/components/descriptions/lineItemReferencedOrderId'
+      type: array
+      items:
+        type: string
+    products:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/product'
+        next: 
+          $ref: '#/components/schemas/next'
+    product:
+      type: object
+      properties:
+        id:
+          type: string
+        org_id:
+          type: string
+        description:
+          type: string
+        object_sku:
+          type: string
+      example:
+        id: 'urn:ibm:ift:product:class:0088672.beef'
+        org_id: 'string'
+        description: 'Demo: fresh beef'
+        object_sku: 'O123456A8CD'
+    locations:
+      type: object
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/location'
+        next: 
+          $ref: '#/components/schemas/next'
+    location:
+      type: object
+      properties:
+        id:
+          type: string
+        org_id:
+          type: string
+        party_role_code:
+          type: string
+        street_address:
+          type: string
+        party_name:
+          type: string
+        city:
+          type: string
+        country_code:
+          type: string
+        po_box_number:
+          type: string
+        postal_code:
+          type: string
+        state:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+      example:
+        id: 'urn:ibm:ift:location:loc:0715756.0002195'
+        org_id: string
+        party_role_code: FARM
+        party_name: Lyman Orchards
+        street_address: 123 Main Street
+        city: Middlefield
+        country_code: US
+        po_box_number: null
+        postal_code: '06455'
+        state: CT
+        latitude: 0
+        longitude: 0
+    lotsSerials:
+      type: object
+      properties:
+        lots_and_serials:
+          type: array
+          items:
+            $ref: '#/components/schemas/lotSerial'
+    lotSerial:
+      type: object
+      properties:
+        id:
+          type: string
+        product_id:
+          type: string
+      example:
+        id: string
+        product_id: 'urn:ibm:ift:product:class:5364820737684.rojk'
+    ilmds:
+      type: object
+      properties:
+        ilmds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ilmd'
+    ilmd:
+      type: object
+      properties:
+        asset_id:
+          type: string
+        id:
+          type: string
+        product_id:
+          type: string
+        additional_trade_item_identification:
+          type: string
+        additional_trade_item_identification_type:
+          type: string
+        lot_number:
+          type: string
+        functional_name:
+          type: string
+        regulated_product_name:
+          type: string
+        trade_item_description:
+          type: string
+        strength_description:
+          type: string
+        net_content_description:
+          type: string
+        description_short:
+          type: string
+        label_description:
+          type: string
+        drained_weight:
+          type: string
+        drained_weight_uom:
+          type: string
+        gross_weight:
+          type: string
+        gross_weight_uom:
+          type: string
+        net_weight:
+          type: string
+        net_weight_uom:
+          type: string
+        manufacturer_of_trade_item_party_name:
+          type: string
+        country_of_origin:
+          type: string
+        sell_by_date:
+          type: string
+        first_freeze_date:
+          type: string
+        item_expiration_date:
+          type: string
+        best_before_date:
+          type: string
+        harvest_start_date:
+          type: string
+        harvest_end_date:
+          type: string
+        farm_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/farm'
+        growing_method_code:
+          type: string
+        production_method_for_fish_and_seafood:
+          type: string
+        unloading_port:
+          type: string
+        vessel_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/vessel'
+    farm:
+      type: object
+      properties:
+        identification:
+          type: string
+        identification_type:
+          type: string
+    vessel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    payloads:
+      type: object
+      properties:
+        payloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/payload'
+        next: 
+          $ref: '#/components/schemas/next'
+    payload:
+      type: object
+      properties:
+        id:
+          type: string
+        org_id:
+          type: string
+        payload_type_uri:
+          type: string
+        payload_timestamp:
+          type: string
+        payload_content_type:
+          type: string
+        event_ids:
+          type: array
+          items:
+            type: string
+        epc_ids:
+          type: array
+          items:
+            type: string
+        location_ids:
+          type: array
+          items:
+            type: string
+        sub_location_ids:
+          type: array
+          items:
+            type: string
+        payload:
+          type: string
+      example:
+        id: 'string'
+        payload_type_uri: 'string'
+        payload_timestamp: '2019-03-13T14:52:48.350Z'
+        payload_content_type: 'string'
+        event_ids: ['string']
+        epc_ids: ['string']
+        product_ids: ['string']
+        location_ids: ['string']
+        sub_location_ids: ['string']
+        payload: 'string'
+    events:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event'
+        next: 
+          $ref: '#/components/schemas/next'
+    event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: event id
+          example: ''
+        org_id:
+          type: string
+        event_type:
+          description: 'observation, transformation, aggregation, disaggregation, commission, decommission,'
+          type: string
+          example: 'aggregation'
+        event_time:
+          type: string
+        transformation_id:
+          type: string
+        biz_step:
+          type: string
+        disposition:
+          type: string
+        read_point_location_id:
+          type: string
+        read_point_sub_location_id:
+          type: string
+        biz_location_id:
+          type: string
+        biz_sub_location_id:
+          type: string
+        epc_ids:
+          type: array
+          items:
+            type: string
+        parent_epc_id:
+          description: 'applies to aggregation and disaggregation events'
+          type: string
+        child_epc_ids:
+          description: 'applies to aggregation and disaggregation events'
+          type: array
+          items:
+            type: string
+        quantities:
+          description: 'applies to object events'
+          type: array
+          items:
+            $ref: '#/components/schemas/epcQty'
+        child_quantities:
+          description: 'applies to aggregation and disaggregation events'
+          type: array
+          items:
+            $ref: '#/components/schemas/epcQty'
+        input_epc_ids:
+          description: 'applies to transformation events'
+          type: array
+          items:
+            type: string
+        input_quantities:
+          description: 'applies to transformation events'
+          type: array
+          items:
+            $ref: '#/components/schemas/epcQty'
+        output_epc_ids:
+          description: 'applies to transformation events'
+          type: array
+          items:
+            type: string
+        output_quantities:
+          description: 'applies to transformation events'
+          type: array
+          items:
+            $ref: '#/components/schemas/epcQty'
+        source_location_ids:
+          description: 'list of source GLNs'
+          type: array
+          items:
+            type: string
+        source_sub_location_ids:
+          description: 'list of source SGLNs'
+          type: array
+          items:
+            type: string
+        destination_location_ids:
+          description: 'list of destination GLNs'
+          type: array
+          items:
+            type: string
+        destination_sub_location_ids:
+          description: 'list of destination SGLNs'
+          type: array
+          items:
+            type: string
+        source_locations:
+          description: 'list of source GLNs and types'
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+        source_sub_locations:
+          description: 'list of source SGLNs and types'
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+        destination_locations:
+          description: 'list of destination GLNs and types'
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+        destination_sub_locations:
+          description: 'list of destination SGLNs and types'
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+        transaction_ids:
+          description: 'list of business transaction identifiers and corresponding business transaction type identifier'
+          type: array
+          items:
+            $ref: '#/components/schemas/transactionIds'
+    next:
+      type: object
+      properties:
+        href:
+          type: string
+      example:
+        href: 'http://food.ibm.com/ift/api/outbound/v2/PATH?&start=TOKEN'
+    trace:
+      type: object
+      properties:
+        epc_id:
+          type: string
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/traceEvent'
+        output_epcs:
+          type: array
+          items:
+            $ref: '#/components/schemas/innerTrace'
+        input_epcs:
+          type: array
+          items:
+            $ref: '#/components/schemas/innerTrace'
+        parent_epcs:
+          type: array
+          items:
+            $ref: '#/components/schemas/innerTrace'
+        child_epcs:
+          type: array
+          items:
+            $ref: '#/components/schemas/innerTrace'
+    innerTrace:
+      type: object
+      properties:
+        epc_id:
+          type: string
+        events:
+          type: array
+          items:
+            type: object
+        output_epcs:
+          type: array
+          items:
+            type: object
+        input_epcs:
+          type: array
+          items:
+            type: object
+        parent_epcs:
+          type: array
+          items:
+            type: object
+        child_epcs:
+          type: array
+          items:
+            type: object
+    consumerTrace:
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/trace'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event'
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/product'
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/location'
+        lots_and_serials:
+          type: array
+          items:
+            $ref: '#/components/schemas/lotSerial'
+        payloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/payload'
+    traceEvent:
+      type: object
+      properties:
+        asset_id:
+          type: string
+    purchaseOrders:
+      type: object
+      properties:
+        purchase_orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/purchaseOrder'
+    purchaseOrder:
+      type: object
+      properties:
+        transaction_id:
+          type: string
+        asset_id:
+          type: string
+        creation_timestamp:
+          type: string
+        document_action_code:
+          type: string
+        order_type_code:
+          type: string
+        requested_delivery_date:
+          type: string
+        note:
+          type: object
+          properties:
+            value:
+              type: string
+            language_code:
+              type: string
+        buyer_location_id:
+          type: string
+        seller_location_id:
+          type: string
+        ship_from_location_id:
+          type: string
+        ship_to_location_id:
+          type: string
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/po_line_items'
+        referenced_orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/referenced_order'
+        latest_delivery_date:
+          type: string
+    po_line_items:
+      type: object
+      properties:
+        product_id:
+          type: string
+        line_item_number:
+          type: number
+        quantity:
+          type: number
+          format: float
+        uom:
+          type: string
+        net_price:
+          type: object
+          properties:
+            amount:
+              type: number
+              format: float
+            currency_code:
+              type: string
+        item_price_base_quantity:
+          type: object
+          properties:
+            uom:
+              type: string
+            quantity:
+              type: number
+              format: float
+        latest_delivery_date:
+          type: string
+        referenced_order:
+          $ref: '#/components/schemas/referenced_order'  
+    referenced_order:
+      type: object
+      properties:
+        purchase_order_id:
+          type: string
+        relationship:
+          type: string
+        line_item_number:
+          type: number
+    despatchAdvices:
+      type: object
+      properties:
+        despatch_advices:
+          type: array
+          items:
+            $ref: '#/components/schemas/despatchAdvice'
+    despatchAdvice:
+      type: object
+      properties:
+        transaction_id:
+          type: string
+        asset_id:
+          type: string
+        creation_timestamp:
+          type: string
+        actual_ship_timestamp:
+          type: string
+        purchase_order_id:
+          type: string
+        invoice_id:
+          type: string
+        shipper_location_id:
+          type: string
+        receiver_location_id:
+          type: string
+        ship_from_location_id:
+          type: string
+        ship_to_location_id:
+          type: string
+        consignee_location_id:
+          type: string
+        transport_information:
+          type: object
+          properties:
+            bill_of_lading_number:
+              type: string
+            transport_means_id:
+              type: string
+        logistic_units:
+          type: array
+          items:
+            $ref: '#/components/schemas/da_logistic_units'
+    da_logistic_units:
+      type: object
+      properties:
+        estimated_delivery_timestamp_at_consignee:
+          type: string
+        logistic_unit_identification:
+          $ref: '#/components/schemas/logistic_unit_identification'
+        package_type_code:
+          type: string
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/da_line_items'
+    logistic_unit_identification:
+      type: object
+      properties:
+        type:
+          type: string
+        id:
+          type: string    
+    da_line_items:
+      type: object
+      properties:
+        product_id:
+          type: string
+        trade_item:
+          $ref: '#/components/schemas/da_trade_item'
+        line_item_number:
+          type: number
+        country_of_origin:
+          type: string
+        quantity:
+          type: number
+          format: float
+        uom:
+          type: string
+        requested_product_id:
+          type: string
+        purchase_order:
+          $ref: '#/components/schemas/da_logistic_units_po'
+    da_trade_item:
+      type: object
+      properties:
+        item_data: 
+          type: array
+          items:
+            type: object
+            properties:
+              item_volume:
+                type: array
+                items:
+                    type: object
+                    properties:
+                      uom:
+                        type: string
+                      measurement:
+                        type: string
+                      measurement_type_code:
+                        type: string
+              best_before_timestamp:
+                type: string
+              lot_number:
+                type: string
+              item_weight:
+                type: array
+                items:
+                    type: object
+                    properties:
+                      uom:
+                        type: string
+                      measurement:
+                        type: string
+                      measurement_type_code:
+                        type: string
+              batch_number:
+                type: string
+    da_logistic_units_po:
+      type: object
+      properties:
+        id:
+          type: string
+        line_item_number:
+          type: number
+        creation_timestamp:
+          type: string
+    receiveAdvices:
+      type: object
+      properties:
+        receive_advices:
+          type: array
+          items:
+            $ref: '#/components/schemas/receiveAdvice'
+    receiveAdvice:
+      type: object
+      properties:
+        id:
+        transaction_id:
+          type: string
+        asset_id:
+          type: string
+        despatch_advice_id:
+          type: string
+        creation_timestamp:
+          type: string
+        receiving_timestamp:
+          type: string
+        shipper_location_id:
+          type: string
+        receiver_location_id:
+          type: string
+        ship_to_location_id:
+          type: string
+        transport_information:
+          type: object
+          properties:
+            transport_means_id:
+              type: string
+        logistic_units:
+          type: array
+          items:
+            $ref: '#/components/schemas/ra_logistic_units'    
+        bill_of_lading_number:
+          type: string
+    ra_logistic_units:
+      type: object
+      properties:
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ra_line_items'
+        unit_id:
+          $ref: '#/components/schemas/ra_unit_id'
+        package_type_code:
+          type: string
+    ra_line_items:
+      type: object
+      properties:
+        received_uom:
+          type: string
+        requested_product_id:
+          type: string
+        accepted_quantity:
+          type: number
+          format: float
+        receiving_condition:
+            type: array
+            items:
+              $ref: '#/components/schemas/ra_line_items_condition'
+        received_quantity:
+          type: number
+          format: float
+        product_id:
+          type: string
+        accepted_uom:
+          type: string
+        despatch_advice:
+          $ref: '#/components/schemas/ra_line_items_da'
+        line_item_number:
+          type: number
+    ra_line_items_condition:
+      type: object
+      properties:
+        uom:
+          type: string
+        quantity:
+          type: number
+          format: float
+        code:
+          type: string
+    ra_line_items_da:
+      type: object
+      properties:
+        id:
+          type: string
+        line_item_number:
+          type: number
+    ra_unit_id:
+      type: object
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+    errorModel:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: 'invalid_inputs'
+              message:
+                type: string
+                example: 'Invalid value 10000 provided for input parameter limit. limit must be an integer greater than or equal to 1 and less than or equal to 1000.'
+              more_info:
+                type: string
+    transactionIds:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+    sources:
+      type: object
+      properties:
+        asset_ids:
+          type: array
+          items:
+            type: object
+            properties:
+              asset_id:
+                type: string
+              hash:
+                type: string
+        sources:
+          type: array
+          items:
+            type: object
+            properties:
+              hash:
+                type: string
+              source:
+                type: string
+    organizations:
+      type: object
+      properties:
+        organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/organization'
+    organization:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        company_prefix:
+          type: array
+          items:
+            type: string
+        epc_id:
+          type: array
+          items:
+            type: string
+        product_id:
+          type: array
+          items:
+            type: string
+        location_id:
+          type: array
+          items:
+            type: string
+    invoices:
+      type: object
+      properties:
+        invoices:
+          type: array
+          items:
+            $ref: '#/components/schemas/invoice'
+    invoice:
+      type: object
+      properties:
+        transaction_id:
+          type: string
+        asset_id:
+          type: string
+        creation_timestamp:
+          type: string
+        buyer_location_id:
+          type: string
+        seller_location_id:
+          type: string
+        payer_location_id:
+          type: string
+        payee_location_id:
+          type: string
+        type:
+          type: string
+        totals:
+          type: object
+          properties:
+            tax_subtotal:
+              type: array
+              items:
+                type: object
+                properties:
+                  amount:
+                    type: number
+                    format: float
+                  currency_code:
+                    type: string
+        delivery_terms:
+          type: object
+          properties:
+            incoterms_code:
+              type: string
+            location_id:
+              type: strings
+            alternate_terms:
+              type: strings
+            cost_payment:
+              type: string
+            instructions:
+              type: string
+        line_items:
+          type: object
+          properties:
+            ordered_quantity:
+              type: object
+              properties:
+                uom:
+                  type: string
+                quantity:
+                  type: string
+        levied_duty_fee_tax:
+          type: array
+          items:
+            type: object
+            properties:
+              tax_percentage:
+                type: string
+              tax_amount:
+                type: object
+                properties:
+                  amount:
+                    type: number
+                    format: float
+                  currency_code:
+                    type: string
+              tax_type_code:
+                type: string
+        item_price_exclusive_allowances_charges:
+          type: object
+          properties:
+            amount:
+              type: number
+              format: float
+            currency_code:
+              type: string
+        extension:
+          type: object
+          properties:
+            currency_exchange_rate_information:
+              type: object
+              properties:
+                conversion_from_code:
+                  type: string
+                exchange_rate:
+                  type: number
+                  format: float
+                conversion_to_code:
+                  type: string
+        purchase_order:
+          type: object
+          properties:
+            id:
+              type: string
+            line_item_number:
+              type: number
+            creation_timestamp:
+              type: string
+        product_id:
+          type: string
+        item_price_base_quantity:
+          type: object
+          properties:
+            uom:
+              type: string
+            quantity:
+              type: string
+              format: float
+        despatch_advice:
+          type: object
+          properties:
+            id:
+              type: string
+            line_item_number:
+              type: number
+        line_item_number:
+          type: number
+        invoiced_quantity:
+          type: object
+          properties:
+            uom:
+              type: string
+            quantity:
+              type: string
+              format: float
+    eventsPostRequest:
+      type: "object"
+      properties:
+        org_id:
+          $ref: '#/components/schemas/orgId'
+        asset_id:
+          $ref: '#/components/schemas/assetId'
+        epc_id:
+          $ref: '#/components/schemas/epcId'
+        parent_epc_id:
+          $ref: '#/components/schemas/parentEpcId'
+        location_id:
+          $ref: '#/components/schemas/locationId'
+        product_id:
+          $ref: '#/components/schemas/productId'
+        event_type:
+          $ref: '#/components/schemas/eventType'
+        biz_transaction_id:
+          $ref: '#/components/schemas/bizTransactionId'
+        biz_transaction_type:
+          $ref: '#/components/schemas/bizTransactionType'
+        biz_step:
+          $ref: '#/components/schemas/bizStep'
+        event_start_timestamp:
+          $ref: '#/components/schemas/eventStartTimestamp'
+        event_end_timestamp:
+          $ref: '#/components/schemas/eventEndTimestamp'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    productsPostRequest:
+      type: "object"
+      properties:
+        org_id:
+          $ref: '#/components/schemas/orgId'
+        description:
+          $ref: '#/components/schemas/description'
+        lot_or_serial_id:
+          $ref: '#/components/schemas/lotOrSerialIdWithoutGrai'
+        product_id:
+          $ref: '#/components/schemas/productId'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    locationsPostRequest:
+      type: "object"
+      properties:
+        org_id:
+          $ref: '#/components/schemas/orgId'
+        location_id:
+          $ref: '#/components/schemas/locationIdAllowSGLN'
+        party_role_code:
+          $ref: '#/components/schemas/partyRoleCode'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    payloadsPostRequest:
+      type: "object"
+      properties:
+        payload_id:
+          $ref: '#/components/schemas/payloadId'
+        epc_id:
+          $ref: '#/components/schemas/epcIdForPayloads'
+        product_id:
+          $ref: '#/components/schemas/productId'
+        org_id:
+          $ref: '#/components/schemas/orgId'
+        location_id:
+          $ref: '#/components/schemas/locationIdAllowSGLN'
+        event_id:
+          $ref: '#/components/schemas/eventId'
+        payload_type_uri:
+          $ref: '#/components/schemas/payloadTypeUri'
+        payload_start_timestamp:
+          $ref: '#/components/schemas/payloadStartTimestamp'
+        payload_end_timestamp:
+          $ref: '#/components/schemas/payloadEndTimestamp'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    lotsAndSerialsPostRequest:
+      type: "object"
+      properties:
+        product_id:
+          $ref: '#/components/schemas/productId'
+        lot_or_serial_id:
+          $ref: '#/components/schemas/lotOrSerialId'
+        event_start_timestamp:
+          $ref: '#/components/schemas/eventStartTimestamp'
+        event_end_timestamp:
+          $ref: '#/components/schemas/eventEndTimestamp'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    ilmdsPostRequest:
+      type: "object"
+      properties:
+        lot_or_serial_id:
+          $ref: '#/components/schemas/lotOrSerialOrSsccId'
+        product_id:
+          $ref: '#/components/schemas/productId'
+        best_before_date_start_timestamp:
+          $ref: '#/components/schemas/bestBeforeDateStarttimestamp'
+        best_before_date_end_timestamp:
+          $ref: '#/components/schemas/bestBeforeDateEndtimestamp'
+        first_freeze_date_start_timestamp:
+          $ref: '#/components/schemas/firstFreezeDateStartTimestamp'
+        first_freeze_date_end_timestamp:
+          $ref: '#/components/schemas/firstFreezeDateEndTimestamp'
+        harvest_start_date_start_timestamp:
+          $ref: '#/components/schemas/harvestStartDateStartTimestamp'
+        harvest_start_date_end_timestamp:
+          $ref: '#/components/schemas/harvestStartDateEndTimestamp'
+        harvest_end_date_start_timestamp:
+          $ref: '#/components/schemas/harvestEndDateStartTimestamp'
+        harvest_end_date_end_timestamp:
+          $ref: '#/components/schemas/harvestEndDateEndTimestamp'
+        item_expiration_date_start_timestamp:
+          $ref: '#/components/schemas/itemExpirationDateStartTimestamp'
+        item_expiration_date_end_timestamp:
+          $ref: '#/components/schemas/itemExpirationDateEndTimestamp'
+        sell_by_date_start_timestamp:
+          $ref: '#/components/schemas/sellByDateStartTimestamp'
+        sell_by_date_end_timestamp:
+          $ref: '#/components/schemas/sellByDateEndTimestamp'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    purchaseOrderPostRequest:
+      type: "object"
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/transactionId'
+        product_id:
+          $ref: '#/components/schemas/productId'
+        order_type_code:
+          $ref: '#/components/schemas/orderTypeCode'
+        document_action_code:
+          $ref: '#/components/schemas/documentActionCode'
+        line_item_referenced_order_id:
+          $ref: '#/components/schemas/lineItemReferencedOrderId'
+        ship_to_location_id:
+          $ref: '#/components/schemas/shipToLocationId'
+        ship_from_location_id:
+          $ref: '#/components/schemas/shipFromLocationId'
+        is_return_order:
+          $ref: '#/components/schemas/isReturnOrder'
+        creation_start_timestamp:
+          $ref: '#/components/schemas/creationStartTimestamp'
+        creation_end_timestamp:
+          $ref: '#/components/schemas/creationEndTimestamp'
+        limit:
+          $ref: '#/components/schemas/limit'
+        offset:
+          $ref: '#/components/schemas/offset'
+        start:
+          $ref: '#/components/schemas/start'
+    despatchAdvicesPostRequest:
+      type: "object"
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/transactionId'
+        product_id:
+          $ref: '#/components/schemas/productId'
+        purchase_order_id:
+          $ref: '#/components/schemas/purchaseOrderId'
+        invoice_id:
+          $ref: '#/components/schemas/invoiceId'
+        logistic_unit_id:
+          $ref: '#/components/schemas/logisticUnitId'
+        bill_of_lading_number:
+          $ref: '#/components/schemas/billOfLadingNumber'
+        transport_means_id:
+          $ref: '#/components/schemas/transportMeansId'
+        ship_to_location_id:
+          $ref: '#/components/schemas/shipToLocationId'
+        ship_from_location_id:
+          $ref: '#/components/schemas/shipFromLocationId'
+        consignee_location_id:
+          $ref: '#/components/schemas/consigneeLocationId'
+        creation_start_timestamp:
+          $ref: '#/components/schemas/creationStartTimestamp'
+        creation_end_timestamp:
+          $ref: '#/components/schemas/creationEndTimestamp'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    receiveAdvicesPostRequest:
+      type: "object"
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/transactionId'
+        product_id:
+          $ref: '#/components/schemas/productId'
+        purchase_order_id:
+          $ref: '#/components/schemas/purchaseOrderId'
+        despatch_advice_id:
+          $ref: '#/components/schemas/despatchAdviceId'
+        logistic_unit_id:
+          $ref: '#/components/schemas/logisticUnitId'
+        ship_to_location_id:
+          $ref: '#/components/schemas/shipToLocationId'
+        ship_from_location_id:
+          $ref: '#/components/schemas/shipFromLocationId'
+        transport_means_id:
+          $ref: '#/components/schemas/transportMeansId'
+        bill_of_lading_number:
+          $ref: '#/components/schemas/billOfLadingNumber'
+        creation_start_timestamp:
+          $ref: '#/components/schemas/creationStartTimestamp'
+        creation_end_timestamp:
+          $ref: '#/components/schemas/creationEndTimestamp'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    invoicesPostRequest:
+      type: "object"
+      properties:
+        transaction_id:
+          $ref: '#/components/schemas/transactionId'
+        type:
+          $ref: '#/components/schemas/invoiceType'
+        purchase_order_id:
+          $ref: '#/components/schemas/purchaseOrderId'
+        despatch_advice_id:
+          $ref: '#/components/schemas/despatchAdviceId'
+        buyer_location_id:
+          $ref: '#/components/schemas/buyerLocationId'
+        seller_location_id:
+          $ref: '#/components/schemas/sellerLocationId'
+        payer_location_id:
+          $ref: '#/components/schemas/payerLocationId'
+        payee_location_id:
+          $ref: '#/components/schemas/payeeLocationId'
+        creation_start_timestamp:
+          $ref: '#/components/schemas/creationStartTimestamp'
+        creation_end_timestamp:
+          $ref: '#/components/schemas/creationEndTimestamp'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    organizationsPostRequest:
+      type: "object"
+      properties:
+        org_id:
+          $ref: '#/components/schemas/orgId'
+        org_name:
+          $ref: '#/components/schemas/orgName'
+        company_prefix:
+          $ref: '#/components/schemas/companyPrefix'
+        epc_id:
+          $ref: '#/components/schemas/epcId'
+        product_id:
+          $ref: '#/components/schemas/productId'
+        location_id:
+          $ref: '#/components/schemas/locationId'
+        limit:
+          $ref: '#/components/schemas/limit'
+        start:
+          $ref: '#/components/schemas/start'
+    sourcesPostRequest:
+      type: "object"
+      properties:
+        asset_id:
+          $ref: '#/components/schemas/assetIdSizeRestricted200'
+  descriptions:
+    limit: restrict the total number of records returned. valid range of integer values is 1 thru 1000
+    offset: sepcifies the number of records to skip
+    start: the url for the next set of paginated records.  the start query parameter only accepts the token part of the url which appears after "start="
+    orgId: restrict results to any of the organization IDs (UUID) provided.
+    orgName: restrict results to any of the organization names provided.
+    companyPrefix: restrict results to any of the company prefixes provided.
+    productId: restrict results to any of the GS1 GTINs (numeric) or IBM Food Trust Product Identifiers (URN) provided.
+    payloadId: restrict results to any of the payload IDs provided.
+    lotOrSerialIdWithoutGrai: restrict results to any of the EPC LGTIN/SGTINs (URN) or IBM Food Trust Product with Lot/Serial Identifiers (URN) provided.
+    lotOrSerialId: restrict results to any of the EPC LGTIN/SGTIN/GRAIs (URN) or IBM Food Trust Product with Lot/Serial/Returnable Identifiers (URN) provided.
+    lotOrSerialOrSsccId: restrict results to any of the EPC GTIN/LGTIN/SGTIN/SSCC/GRAIs (URN) or IBM Food Trust Product with Lot/Serial/Returnable Identifiers (URN) provided.
+    locationId: restrict results to any of the GS1 GLNs (numeric) or IBM Food Trust Location Identifiers (URN) provided.
+    locationIdAllowSGLN: restrict results to any of the GS1 GLNs (numeric), EPC SGLNs (URN) or IBM Food Trust Location Identifiers (URN) provided.  If an EPC SGLN is provided, it will be converted to its corresponding GS1 GLN.  The result will contain information for the corresponding GS1 GLN.
+    epcId: restrict results to any of the EPC LGTIN/SGTIN/SSCC/GRAIs (URN) or IBM Food Trust Product with Lot/Serial/Returnable/Logistic Unit Identifiers (URN) provided.
+    epcIdForPayloads: restrict results to any of the EPC GTIN/LGTIN/SGTIN/SSCC/GRAIs (URN) or IBM Food Trust Product with Product/Lot/Serial/Returnable/Logistic Unit Identifiers (URN) provided.
+    parentEpcId: restrict results to any of the aggregation and disaggregation parent EPC LGTIN/SGTIN/SSCC/GRAIs (URN) or IBM Food Trust Product with Lot/Serial/Returnable/Logistic Unit Identifiers (URN) provided.
+    eventId: restrict results to any of the event identifiers (string) provided.
+    description: restrict results based on approximate string matching against any of the description strings provided
+    payloadTypeUri: restrict results to any of the payload type uri's
+    payloadStartTimestamp: restrict results to records with a payload timestamp on or after the timestamp (ISO 8601) provided
+    payloadEndTimestamp: restrict results to records with a payload timestamp strictly before the timestamp (ISO 8601) provided
+    partyRoleCode: restrict results to any of the GS1 Party Role Codes and IBM Food Trust Party Role Codes (string) provided.
+    assetId: restrict results to any of the asset identifiers (URN) provided.
+    assetIdSizeRestricted30: restrict results to any of the asset identifiers (URN) provided. Number of items must be between 1 and 30, inclusive
+    assetIdSizeRestricted200: restrict results to any of the asset identifiers (URN) provided. Number of items must be between 1 and 200, inclusive
+    eventType: restrict results to any of the event types -- aggregation, commission, decommission, disaggregation, observation, transformation (string) -- provided.
+    purchaseOrderId: restrict results to any of the GS1 Business Transaction Identifiers (URN) or IBM Food Trust Business Transaction Identifiers (URN) provided.
+    invoiceId: restrict results to any of the GS1 Business Transaction Identifiers (URN) or IBM Food Trust Business Transaction Identifiers (URN) provided.
+    billOfLadingNumber: restrict results to any of the GS1 Business Transaction Identifiers (URN) or IBM Food Trust Business Transaction Identifiers (URN) provided.
+    transportMeansId: restrict results to any of the Transport Means Identifiers provided.
+    despatchAdviceId: restrict results to any of the GS1 Business Transaction Identifiers (URN) or IBM Food Trust Business Transaction Identifiers (URN) provided.
+    transactionId: restrict results to any of the GS1 Business Transaction Identifiers (URN) or IBM Food Trust Business Transaction Identifiers (URN) provided.
+    bizTransactionId: restrict results to any of the GS1 Business Transaction Identifiers (URN) or IBM Food Trust Business Transaction Identifiers (URN) provided.
+    bizTransactionType: restrict results to any of the GS1 Business Transaction Type Identifiers (URN) provided.
+    bizStep: restrict results to any of the GS1 Business Step Identifiers (URN) or IBM Food Trust Business Step Identifiers (URN) provided.
+    logisticUnitId: restrict results to any of the EPC SSCCs (URN), GS1 SSCCs (numeric), or IBM Food Trust Logistic Unit Identifiers (URN) provided.
+    orderTypeCode: restrict results to any of the GS1 Order Type Codes
+    documentActionCode: restrict results to GS1 Document Action Codes ADD, DELETE, or CHANGE_BY_REFRESH
+    lineItemReferencedOrderId: restrict results to any of the GS1 Business Transaction Identifiers (URN) or IBM Food Trust Business Transaction Identifiers (URN) provided that match line_items.referenced_order.purchase_order_id.
+    eventStartTimestamp: restrict results to records with an event timestamp on or after the timestamp (ISO 8601) provided
+    eventEndTimestamp: restrict results to records with an event timestamp strictly before the timestamp (ISO 8601) provided
+    creationStartTimestamp: restrict results to records with a document creation timestamp on or after the timestamp (ISO 8601) provided
+    creationEndTimestamp: restrict results to records with a document creation timestamp strictly before the timestamp (ISO 8601) provided
+    bestBeforeDateStarttimestamp: restrict results to records with a best before date on or after the timestamp (ISO 8601) provided
+    bestBeforeDateEndtimestamp: restrict results to records with a best before date strictly before the timestamp (ISO 8601) provided
+    firstFreezeDateStartTimestamp: restrict results to records with a first freeze date on or after the timestamp (ISO 8601) provided
+    firstFreezeDateEndTimestamp: restrict results to records with a first freeze date strictly before the timestamp (ISO 8601) provided
+    harvestStartDateStartTimestamp: restrict results to records with a harvest start date on or after the timestamp (ISO 8601) provided
+    harvestStartDateEndTimestamp: restrict results to records with a harvest start date strictly before the timestamp (ISO 8601) provided
+    harvestEndDateStartTimestamp: restrict results to records with a harvest end date on or after the timestamp (ISO 8601) provided
+    harvestEndDateEndTimestamp: restrict results to records with a harvest end date strictly before the timestamp (ISO 8601) provided
+    itemExpirationDateStartTimestamp: restrict results to records with an item expiration date on or after the timestamp (ISO 8601) provided
+    itemExpirationDateEndTimestamp: restrict results to records with an item expiration date strictly before the timestamp (ISO 8601) provided
+    sellByDateStartTimestamp: restrict results to records with a sell by date on or after the timestamp (ISO 8601) provided
+    sellByDateEndTimestamp: restrict results to records with a sell by date strictly before the timestamp (ISO 8601) provided
+    invoiceType: restrict results to any of the GS1 Invoice Type Code values provided.
+    isReturnOrder: restrict results to purchase order returns if true and purchase orders if false. Both may be returned if this query parameter is not provided
+security:
+  - bearerAuth: []

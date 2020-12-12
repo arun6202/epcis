@@ -1,0 +1,1366 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: IBM Food Trust Documents API
+  description: |
+    The <b>Documents</b> API allows authorized users to upload, view and share supply chain documents, such as facility
+    certificates and audit reports, and their related properties and attachments.
+
+    ## Document types and properties
+
+    A document definition consists of a set of document properties, a content file in PDF, text, PNG, JPEG or GIF
+    format, and optional file attachments.
+
+    The required document properties are specific to each document type, for examples, `Generic Document`,
+    `Generic Certificate`, and `GAA BAP Certificate`. To view the available document types, call the `GET /categories`
+    endpoint. To view the required properties for a specific document type, call the `GET /templates/{documentType}`
+    endpoint. To create a document without a specific type, use `Generic Document`. To create a certificate without a
+    specific type, use `Generic Certificate`.
+
+    ## Document linking and focus
+
+    A document can be linked to traceable elements like facilities, products, and EPCs. A document can only be linked to
+    one kind of traceable element - facility, product, or EPC, which is the focus for that document. To specify a
+    facility focus, use the `locationGLNList` property (currently only one facility ID is allowed); to specify a product
+    focus, use the `productList` property (one or more product IDs); to specify an EPC focus, use the `epcList` property
+    (one or more product EPCs).
+
+    A document can also be linked to EPCIS events and business transactions. To link a document to EPCIS events, use the
+    `eventIDList` property (one or more event IDs); to link a document to business transactions, use the
+    `transactionIDList` property (one or more transaction IDs).
+
+    ## Document sharing
+
+    A document is created with `private` entitlement by default. Private documents can be viewed only by registered
+    users in the organization that owns the document. Methods for sharing documents with other organizations are
+    described below.
+
+    ### Linked documents
+
+    A linked document can be implicitly shared with other organizations by setting the document's `entitlementMode` to
+    `linked`. Organizations with access to the document focus (facility, product, or EPC) will be able to view the
+    linked document, in their document library and trace results. Note, in this process, only the `locationGLNList`,
+    `productList`, and `epcList` properties are evaluated; the `eventIDList` and `transactionIDList` properties are not
+    evaluated.
+
+    ### Explicitly shared documents
+
+    Both `private` and `linked` documents can be explicitly shared with organizations specified by `entitledOrgIds` in
+    the entitlement information.
+
+    ### Related information
+
+    Entitlement documentation and usage details are available in the
+    <a target="_blank" href="https://github.com/IBM/IFT-Developer-Zone/wiki/Data-Entitlement-and-Access-Control">
+    Developer Zone</a>.
+
+    ## Authorization to use the Documents API
+
+    Only authorized users with a registered IBMid can make API calls. If necessary, contact your organization
+    administrator for authorization to use this API.
+
+    Authenticate to use the Documents API with your registered IBMid, as follows:
+
+    1. Open the [IBM Blockchain Solution Manager](/ift/api/identity-proxy/login) page in a new tab or window.
+    2. Log in with your IBMid, and if necessary, select your organization.
+    3. Click **Copy** to copy your user token.
+    4. Return to this page and click the green **Authorize** button on the lower right.
+    5. In the **Available authorizations** dialog, paste your copied user token into the **Value** field.
+    6. Click **Authorize** and **Close**.
+
+    You are now authorized to use the API. For subsequent sessions, repeat the steps above to obtain and use a new user
+    token.
+
+servers:
+  - url: '/ift/api/documents/v1'
+
+paths:
+  /documents:
+    post:
+      tags:
+        - Documents
+      summary: Creates a new document
+      description: |
+        Creates a new document with the specified properties, content (via file upload) and entitlement (access
+        permission) information.
+
+        ## Request body
+
+        The request body must include valid MIME `multipart/form-data`. The `properties` part is required; the
+        `content` and `entitlement` parts are not required for a successful call. The default entitlement mode is
+        `private`, which limits access to only the organization that owns the document.
+
+        ### Properties part
+
+        The `properties` part (required) of the request body must be valid JSON with a defined `documentType` and the
+        required properties for that document type. Call `GET /categories` to retrieve the defined document categories
+        and types and `GET /templates/{documentType}` to retrieve a document template. Once created, the `documentType`
+        cannot be changed.
+
+        Use the `issueDate` property to specify the issue date and the `expiryDate` property to specify the expiration
+        date, in ISO 8601 full-date format (`YYYY-MM-DD`).
+
+        The maximum upload size for properties (JSON) is 20 KB. Requests over this limit will return an HTTP 413 error
+        for unsuccessful document creation.
+
+        #### Custom properties
+
+        Custom properties (properties not predefined in the schema) must be specified as an array, using the
+        `customProperties` property. For each custom property, specify a `name` (display name) and `value` (string,
+        number, or other value). Optionally, for a string property, use the `format` property to describe the
+        validation and display requirement. Supported formats include:
+
+        - `date`: ISO 8601 full-date (`YYYY-MM-DD`).
+        - `date-time`: ISO 8601 full-date and full-time (`YYYY-MM-DDThh:mm:ss.mmmZ`).
+        - `gln`: GS1 GLN (13 digit) or IBM location ID format (`urn:ibm:ift:location:loc:*`).
+        - `gtin`: GS1 GTIN (14 digit) or IBM product ID format (`urn:ibm:ift:product:class:*`).
+
+        #### Properties example
+
+        The following example shows JSON syntax for both predefined and custom properties:
+
+        ```json
+        {
+          "documentType": "Generic Document",
+          "documentTitle": "TPS Report 12345",
+          "issueDate": "2019-12-01",
+          "locationGLNList": ["9501101530003"],
+          "customProperties": [
+            {
+              "name": "Age",
+              "value": 5
+            },
+            {
+              "name": "Related product",
+              "value": "95011015300038",
+              "format": "gtin"
+            }
+          ]
+        }
+        ```
+
+        ## Content part
+
+        The `content` part of the request body specifies the document file (PDF, text, PNG, JPEG or GIF) for upload.
+        Though not strictly required for a successful call, the content file is the document for purposes of viewing,
+        downloading and sharing. The maximum upload size is 20 MB for the content file. Requests over the limit will
+        receive an HTTP 413 error for unsuccessful document creation.
+
+        ## Entitlement part
+
+        The `entitlement` part (JSON) of the request body specifies the document entitlement (access permission)
+        information. The supported entitlement modes are `private` and `linked`. If not specified, the default document
+        entitlement is `private`, which limits access to the owning organization only. Specify `linked` to grant access
+        to organizations with access to the document focus (one or more product EPCs or a single facility ID).
+        Additionally, use the `entitledOrgIds` property to explicitly grant access to specific organizations.
+
+        ## Responses
+
+        Document upload is an asynchronous process. Depending on the system load, a `POST /documents` request can
+        return HTTP 201 (Created) or HTTP 202 (Accepted). An HTTP 201 response, which is the usual case, indicates
+        successful creation of the document and returns the system-generated document ID (`id`).
+
+        An HTTP 202 response (Accepted) indicates creation of the document is processing and returns a
+        system-generated transaction ID (`correlationId`) and document ID (`id`). To check the status of the processing
+        transaction, specify the returned `correlationId` in a `GET /transactions` call. For multiple upload requests
+        in parallel, record the `correlationId` for each HTTP 202 response and poll transaction status using the
+        `/transactions` endpoint.
+
+      requestBody:
+        description: |
+          Specifies the document's `properties` (required), `content` and `entitlement` (access permission) information.
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                properties:
+                  $ref: '#/components/schemas/DocumentProperties'
+                content:
+                  type: string
+                  format: binary
+                entitlement:
+                  $ref: '#/components/schemas/EntitlementInfo'
+      responses:
+        '201':
+          $ref: '#/components/responses/DocumentCreatedResponse'
+        '202':
+          $ref: '#/components/responses/DocumentPendingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+        - Documents
+      summary: Retrieves a list of documents
+      description: |
+        Retrieves information about the specified documents, including properties and references to any attachments.
+        Use `GET /documents/{docId}/content` to retrieve the contents of the documents.
+      parameters:
+        - $ref: '#/components/parameters/docIdsInQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /documents/{docId}:
+    get:
+      tags:
+        - Documents
+      summary: Retrieves a document
+      description: |
+        Retrieves information about the specified document, including properties and references to any attachments.
+        Use `GET /documents/{docId}/content` to retrieve the content of the document.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+        - $ref: '#/components/parameters/version'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - Documents
+      summary: Updates a document
+      description: |
+        Updates the specified document with the specified properties, and optionally content and entitlement information.
+        The request must pass all properties instead of delta changes.
+        Note `documentType` cannot be changed to a different type after creation.
+        On success, the document version will be increased.
+
+        The request body's MIME type can be `application/json` or `multipart/form-data`:
+
+        ### application/json
+
+        The request body contains the properties JSON, and only the properties of the document will be updated.
+        The content and entitlement information of the document remain unchanged.
+
+        Use `PUT /documents/{docId}/content` to update the content, and
+        `PUT /documents/{docId}/entitlement` to update the entitlement information.
+
+        ### multipart/form-data
+
+        The request body contains the `properties`, `content` and `entitlement` parts.
+        The `properties` part (JSON) is required; the `content` (file) and `entitlement` (JSON) parts are optional -
+        if they are absent, the existing content and entitlement information of the document remain unchanged.
+
+        The maximum upload size for properties (JSON) is 20 KB. The maximum upload size for the content file is 20 MB.
+        Requests over the limit will receive an HTTP 413 error.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentProperties'
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                properties:
+                  $ref: '#/components/schemas/DocumentProperties'
+                content:
+                  type: string
+                  format: binary
+                entitlement:
+                  $ref: '#/components/schemas/EntitlementInfo'
+      responses:
+        '200':
+          $ref: '#/components/responses/DocumentUpdatedResponse'
+        '202':
+          $ref: '#/components/responses/DocumentPendingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestJson'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - Documents
+      summary: Deletes a document
+      description: |
+        Deletes the specified document. The document will be deleted from the system and cannot be recovered. Any
+        organizations that you have shared the document with will no longer be able to view it.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /documents/{docId}/content:
+    get:
+      tags:
+        - Documents
+      summary: Retrieves a document's content
+      description: |
+        Retrieves the content of the specified document. Only valid if the content has been previously uploaded,
+        e.g. when creating the document.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+        - $ref: '#/components/parameters/version'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - Documents
+      summary: Updates a document's content
+      description: |
+        Updates the content of the specified document via file upload.
+        On success, the document version will be increased.
+
+        Allowed file types include PDF, text, PNG, JPEG and GIF. Other file types will be rejected.
+
+        The maximum upload size for the content file is 20 MB. Requests over the limit will receive an HTTP 413 error.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+      requestBody:
+        description: File to upload
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          $ref: '#/components/responses/DocumentUpdatedResponse'
+        '202':
+          $ref: '#/components/responses/DocumentPendingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /documents/{docId}/entitlement:
+    get:
+      tags:
+        - Documents
+      summary: Retrieves a document's entitlement information
+      description: |
+        Retrieves the entitlement information of the specified document.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitlementInfo'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - Documents
+      summary: Updates a document's entitlement information
+      description: |
+        Updates the entitlement information of the specified document.
+        Supported entitlement modes are `private` and `linked`.
+        The document version will not be changed.
+
+        Note this endpoint replaces the entitlement information and expects both `entitlementMode` and `entitledOrgIds`
+        to be passed.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+      requestBody:
+        description: Entitlement information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntitlementInfo'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitlementInfo'
+        '400':
+          $ref: '#/components/responses/BadRequestJson'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /documents/search:
+    post:
+      tags:
+        - Search
+      summary: Searches documents
+      description: |
+        Searches documents with the specified parameters.
+        Only document summaries, i.e. indexed properties (e.g. `documentType`), are returned from this API.
+        Use the other endpoints to retrieve the full properties and contents of the documents.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/count'
+      requestBody:
+        description: |
+          Search conditions, must be valid JSON. Multiple conditions are "ANDed" together. Supported search conditions
+          include:
+
+          - `orgId`: matches any of the specified organizations.
+          - `orgIdNot`: matches none of the specified organizations.
+          - `timestamp`: matches the specified timestamp or timestamp range.
+          - `categories`: matches any of the specified document categories.
+          - `properties.documentType`: matches any of the specified document types.
+          - `properties.documentTitle`: matches any of the specified document titles.
+          - `properties.issueDate`: matches the specified date or date range.
+          - `properties.expiryDate`: matches the specified date or date range.
+          - `properties.locationGLNList`: matches any of the specified GLNs.
+          - `properties.epcList`: matches any of the specified EPCs.
+          - `properties.productList`: matches any of the specified product IDs.
+          - `properties.eventIDList`: matches any of the specified event IDs.
+          - `properties.transactionIDList`: matches any of the specified transaction IDs.
+
+          Below example searches certificates linked to a facility:
+
+          ```json
+          {
+            "categories": ["Certificate"],
+            "properties": {
+              "locationGLNList": ["9501101530003"]
+            }
+          }
+          ```
+
+          Below example searches documents of type `Generic Document` linked to an EPC:
+
+          ```json
+          {
+            "properties": {
+              "documentType": "Generic Document",
+              "epcList": [
+                "urn:epc:class:lgtin:4012345.012345.998877"
+              ]
+            }
+          }
+          ```
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchConditions'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        '400':
+          $ref: '#/components/responses/BadRequestJson'
+  /documents/{docId}/attachments:
+    post:
+      tags:
+        - Attachments
+      summary: Creates a new attachment
+      description: |
+        Uploads and creates a new attachment to the specified document. Note that attachments
+        are secondary to the primary content file of the document.
+        On success, the document version will be increased.
+
+        Allowed file types include PDF, text, PNG, JPEG and GIF. Other file types will be rejected.
+
+        The maximum upload size for the attachment file is 20 MB. Requests over the limit will receive an HTTP 413
+        error.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+      requestBody:
+        description: Attachment data
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                content:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          $ref: '#/components/responses/AttachmentCreatedResponse'
+        '202':
+          $ref: '#/components/responses/AttachmentPendingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /documents/{docId}/attachments/{attachmentId}:
+    get:
+      tags:
+        - Attachments
+      summary: Retrieves an attachment
+      description: |
+        Retrieves the specified attachment to the specified document.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+        - $ref: '#/components/parameters/attachmentId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - Attachments
+      summary: Updates an attachment
+      description: |
+        Updates the specified attachment via file upload.
+        On success, the document version will be increased.
+
+        Allowed file types include PDF, text, PNG, JPEG and GIF. Other file types will be rejected.
+
+        The maximum upload size for the attachment file is 20 MB. Requests over the limit will receive an HTTP 413
+        error.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+        - $ref: '#/components/parameters/attachmentId'
+      requestBody:
+        description: File to upload
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          $ref: '#/components/responses/AttachmentUpdatedResponse'
+        '202':
+          $ref: '#/components/responses/AttachmentPendingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - Attachments
+      summary: Deletes an attachment
+      description: |
+        Deletes the specified attachment from the specified document.
+        On success, the document version will be increased.
+      parameters:
+        - $ref: '#/components/parameters/docId'
+        - $ref: '#/components/parameters/attachmentId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /transactions:
+    get:
+      tags:
+        - Transactions
+      summary: Retrieves the status of document transactions
+      description: |
+        Retrieves the status of outstanding document transactions. Transactions are identified by correlation IDs,
+        which are returned from create and update requests when HTTP 202 is returned.
+      parameters:
+        - in: query
+          name: correlationIds[]
+          required: true
+          description: Array of correlation IDs, obtained from previous create or update requests.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transactions'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Retrieves the document category/type map
+      description: |
+        Retrieves a map containing document categories as keys and arrays of document types as values.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryMap'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /templates/{documentType}:
+    get:
+      tags:
+        - Templates
+      summary: Retrieves a document type template
+      description: |
+        Retrieves the specified document type template.
+        A document type template contains schema and UI definitions, and can be used to validate and render documents.
+
+        The schema specifies the properties associated with a document type, which ones are required, and what format
+        data must be in.
+        If a property has `isFocusProperty` is set to true, it is considered the focus of the document. Values for
+        focus properties have impact on entitlement if the document's `entitlementMode` is specified as `linked` as
+        well as when the document shows in trace results.
+      parameters:
+        - $ref: '#/components/parameters/documentType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    docId:
+      name: docId
+      in: path
+      required: true
+      description: Document ID
+      schema:
+        type: string
+    docIdsInQuery:
+      name: docIds[]
+      in: query
+      required: true
+      description: Array of document IDs, maximum number of IDs is 30.
+      schema:
+        type: array
+        items:
+          type: string
+    attachmentId:
+      name: attachmentId
+      in: path
+      required: true
+      description: attachment ID
+      schema:
+        type: string
+    documentType:
+      name: documentType
+      in: path
+      required: true
+      description: Document type name
+      schema:
+        type: string
+    version:
+      name: version
+      in: query
+      required: false
+      description: Document version
+      schema:
+        type: integer
+    limit:
+      name: limit
+      in: query
+      description: Limits the total number of document summaries returned. Valid range is 0 thru 1000.
+      schema:
+        $ref: '#/components/schemas/limit'
+    offset:
+      name: offset
+      in: query
+      description: Start position for the next set of paginated document summaries.
+      schema:
+        $ref: '#/components/schemas/offset'
+    count:
+      name: count
+      in: query
+      description: Specifies whether to retrieve the total count of document summaries that match the search conditions.
+      schema:
+        $ref: '#/components/schemas/count'
+  schemas:
+    EntitlementInfo:
+      type: object
+      properties:
+        entitlementMode:
+          $ref: '#/components/schemas/EntitlementMode'
+        entitledOrgIds:
+          type: array
+          description: Entitled organization IDs
+          items:
+            type: string
+          example: []
+    EntitlementMode:
+      type: string
+      description: Entitlement mode
+      enum:
+        - linked
+        - private
+      example: private
+    DocumentProperties:
+      type: object
+      properties:
+        documentType:
+          type: string
+          description: Document type
+          example: 'Generic Document'
+        documentTitle:
+          type: string
+          description: Document title
+          example: 'TPS Report'
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Document ID
+        orgId:
+          type: string
+          description: Organization ID
+        version:
+          type: integer
+          description: Document version
+          example: 1
+        timestamp:
+          type: string
+          description: Version timestamp
+          example: '2019-09-12T03:04:23+00:00'
+        entitlement:
+          type: object
+          $ref: '#/components/schemas/EntitlementInfo'
+        categories:
+          type: array
+          items:
+            type: string
+            example: Other
+        properties:
+          $ref: '#/components/schemas/DocumentProperties'
+        content:
+          type: object
+          properties:
+            filename:
+              type: string
+              description: filename
+            contentType:
+              type: string
+              description: MIME content type
+              example: 'application/pdf'
+        attachments:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Attachment ID
+              filename:
+                type: string
+                description: Attachment filename
+              contentType:
+                type: string
+                description: MIME content type
+                example: 'application/pdf'
+    Documents:
+      type: array
+      items:
+        $ref: '#/components/schemas/Document'
+    limit:
+      type: number
+      default: 500
+    offset:
+      type: number
+      default: 0
+    count:
+      type: boolean
+      default: false
+    SearchConditions:
+      type: object
+      properties:
+        orgId:
+          type: string
+          example: org12345
+        orgIdNot:
+          type: string
+          example: org12345
+        timestamp:
+          type: object
+          properties:
+            inRange:
+              type: object
+              properties:
+                lower:
+                  type: string
+                upper:
+                  type: string
+              example:
+                lower: "2019-10-01T00:00:00+00:00"
+        categories:
+          type: array
+          items:
+            type: string
+            example: Certificate
+        properties:
+          type: object
+          properties:
+            documentType:
+              type: string
+              example: GAA BAP Certificate
+            documentTitle:
+              type: string
+              example: TPS Report 12345
+            expiryDate:
+              type: object
+              properties:
+                inRange:
+                  type: object
+                  properties:
+                    lower:
+                      type: string
+                    upper:
+                      type: string
+                  example:
+                    upper: "2019-10-03"
+            locationGLNList:
+              type: array
+              items:
+                type: string
+                example: "9501101530003"
+            epcList:
+              type: array
+              items:
+                type: string
+                example: "urn:epc:class:lgtin:4012345.012345.998877"
+            productList:
+              type: array
+              items:
+                type: string
+                example: "00088737123216"
+            eventIDList:
+              type: array
+              items:
+                type: string
+                example: "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+            transactionIDList:
+              type: array
+              items:
+                type: string
+                example: "urn:epcglobal:cbv:bt:0614141000029:asn12345"
+    DocumentSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        orgId:
+          type: string
+        version:
+          type: number
+          example: 1
+        timestamp:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+            example: Certificate
+        properties:
+          type: object
+          properties:
+            documentType:
+              type: string
+            documentTitle:
+              type: string
+            issueDate:
+              type: string
+            expiryDate:
+              type: string
+            locationGLNList:
+              type: array
+              items:
+                type: string
+            epcList:
+              type: array
+              items:
+                type: string
+            productList:
+              type: array
+              items:
+                type: string
+            eventIDList:
+              type: array
+              items:
+                type: string
+            transactionIDList:
+              type: array
+              items:
+                type: string
+    SearchResults:
+      type: object
+      properties:
+        count:
+          type: number
+          example: 100
+        documentSummaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentSummary'
+    Transaction:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          description: Correlation ID
+          example: "cor12345"
+        transactionStatus:
+          type: string
+          description: Transaction status
+          enum:
+            - success
+            - failed
+            - documentError
+            - pending
+            - notFound
+        errorMessage:
+          type: string
+          description: Error message
+          example: ""
+    Transactions:
+      type: array
+      items:
+        $ref: '#/components/schemas/Transaction'
+    CategoryMap:
+      type: object
+      properties:
+        Certificate:
+          type: object
+          properties:
+            documentTypes:
+              type: array
+              items:
+                type: object
+                properties:
+                  documentType:
+                    type: string
+                    example: 'Generic Certificate'
+        Other:
+          type: object
+          properties:
+            documentTypes:
+              type: array
+              items:
+                type: object
+                properties:
+                  documentType:
+                    type: string
+                    example: 'Generic Document'
+    Template:
+      type: object
+      properties:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Description of a document type
+              example: 'Document definition for a facility certificate'
+            required:
+              type: array
+              items:
+                type: string
+              example: ['documentType']
+            type:
+              type: string
+              description: The type of the template
+              example: 'object'
+            properties:
+              type: object
+              properties:
+                documentType:
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                      description: Description of the documentType property
+                      example: 'Type of document'
+                    type:
+                      type: string
+                      description: Type of the documentType property
+                      example: 'string'
+                    minLength:
+                      type: number
+                      description: Validator for string min length of the documentType property
+                      example: 1
+        ui:
+          type: object
+          properties:
+            properties:
+              type: object
+    BadRequestError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: 'invalidRequest'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'Request body must be valid multipart/form-data'
+    BadRequestJsonError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: 'invalidRequest'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'Request body must be valid JSON'
+    UnauthorizedError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error Code
+          example: 'unauthorized'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'User Unauthorized: Invalid token provided'
+    ForbiddenError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: 'accessDenied'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'No read access to the specified document'
+    NotFoundError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: 'notFound'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'The specified document could not be found'
+    GoneError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: 'documentDeleted'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'The specified document has been deleted'
+    PayloadTooLargeError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: 'payloadTooLarge'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'The request payload is larger than allowed size'
+    UnsupportedMediaTypeError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: 'notSupported'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'The content type is not supported'
+    InternalServerError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: 'genericError'
+        message:
+          type: string
+          description: Error message (no translations)
+          example: 'An unexpected error has occurred'
+  responses:
+    DocumentUpdatedResponse: # 200
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Document ID
+                example: doc123
+    AttachmentUpdatedResponse: # 200
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: attachment ID
+                example: att123
+    DocumentCreatedResponse: # 201
+      description: Created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Document ID
+                example: doc123
+    AttachmentCreatedResponse: # 201
+      description: Created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: attachment ID
+                example: att123
+    DocumentPendingResponse: # 202
+      description: Accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Document ID
+                example: doc123
+              correlationId:
+                type: string
+                description: correlation ID associated with transaction
+                example: cor456
+    AttachmentPendingResponse: # 202
+      description: Accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: attachment ID
+                example: att123
+              correlationId:
+                type: string
+                description: correlation ID associated with transaction
+                example: cor456
+    BadRequest: # 400
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    BadRequestJson: # 400
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestJsonError'
+    Unauthorized: #401
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    Forbidden: # 403
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+    NotFound: # 404
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+    Gone: # 410
+      description: Gone
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GoneError'
+    PayloadTooLarge: # 413
+      description: Payload Too Large
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PayloadTooLargeError'
+    UnsupportedMediaType: # 415
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnsupportedMediaTypeError'
+    InternalServerError: # 500
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerError'
+
+security:
+  - bearerAuth: []
