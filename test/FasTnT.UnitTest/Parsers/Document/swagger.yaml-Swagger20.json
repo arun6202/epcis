@@ -1,0 +1,4622 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2.0.0",
+    "title": "IBM Food Trust Trace API",
+    "description": "API results are cached after the first invocation for the query parameters provided.  To bypass the API caching and refresh the cached result, pass in the header `X-ApiCache-Bypass: true`\n\n## Authorization to use the Trace API\nOnly authorized users with a registered IBMid can make API calls. If necessary, contact your organization administrator for authorization to use this API.\nAuthenticate to use the Trace API with your registered IBMid, as follows:\n1. Open the [IBM Blockchain Solution Manager](/ift/api/identity-proxy/login) page in a new tab or window.\n2. Log in with your IBMid, and if necessary, select your organization.\n3. Click **Copy** to copy your user token.\n4. Return to this page and click the green **Authorize** button on the lower right.\n5. In the **Available authorizations** dialog, paste your copied user token into the **Value** field.\n6. Click **Authorize** and **Close**.\nYou are now authorized to use the API. For subsequent sessions, repeat the steps above to obtain and use a new user\ntoken.\n",
+    "contact": {}
+  },
+  "host": "example.com",
+  "basePath": "/ift/api/outbound/v2",
+  "securityDefinitions": {},
+  "schemes": [],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/products": {
+      "get": {
+        "description": "Retrieves Master Item Data product information\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Products_GET",
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Products_GET",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "org_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": ""
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "lot_or_serial_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/products"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves Master Item Data product information\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Products_POST",
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Products_POST",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/productsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/products"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/locations": {
+      "get": {
+        "description": "Retrieves Master Facility Data location information\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Locations_GET",
+        "tags": [
+          "Locations"
+        ],
+        "operationId": "Locations_GET",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "org_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": ""
+          },
+          {
+            "name": "location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "party_role_code[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/locations"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves Master Facility Data location information\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Locations_POST",
+        "tags": [
+          "Locations"
+        ],
+        "operationId": "Locations_POST",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/locationsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/locations"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/payloads": {
+      "get": {
+        "description": "Retrieves payloads\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Payloads_GET",
+        "tags": [
+          "Payloads"
+        ],
+        "operationId": "Payloads_GET",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "payload_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "epc_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "org_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": ""
+          },
+          {
+            "name": "location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "event_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "payload_type_uri[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "payload_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "payload_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/payloads"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves payloads\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Payloads_POST",
+        "tags": [
+          "Payloads"
+        ],
+        "operationId": "Payloads_POST",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/payloadsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/payloads"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "description": "Retrieves events\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Events_GET",
+        "tags": [
+          "Events"
+        ],
+        "operationId": "Events_GET",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "org_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": ""
+          },
+          {
+            "name": "asset_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "epc_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "parent_epc_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "event_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "event_type[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "biz_transaction_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "biz_transaction_type[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "biz_step[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "event_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "event_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/events"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves events\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Events_POST",
+        "tags": [
+          "Events"
+        ],
+        "operationId": "Events_POST",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/eventsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/events"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/lots_and_serials": {
+      "get": {
+        "description": "Finds product lots and serials. If only limit and/or start query parameter is provided, the response will be an empty list.\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "LotsAndSerials_GET",
+        "tags": [
+          "Lots and Serials"
+        ],
+        "operationId": "LotsAndSerials_GET",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "lot_or_serial_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "event_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "event_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/lotsSerials"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Finds product lots and serials. If only limit and/or start query parameter is provided, the response will be an empty list.\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "LotsAndSerials_POST",
+        "tags": [
+          "Lots and Serials"
+        ],
+        "operationId": "LotsAndSerials_POST",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/lotsAndSerialsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/lotsSerials"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/ilmds": {
+      "get": {
+        "description": "Retrieves ILMD data submitted about lots and serials\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Ilmds_GET",
+        "tags": [
+          "Lots and Serials"
+        ],
+        "operationId": "Ilmds_GET",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "lot_or_serial_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "best_before_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "best_before_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "first_freeze_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "first_freeze_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "harvest_start_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "harvest_start_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "harvest_end_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "harvest_end_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "item_expiration_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "item_expiration_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "sell_by_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "sell_by_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ilmd data matching criteria",
+            "schema": {
+              "$ref": "#/definitions/ilmds"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves ILMD data submitted about lots and serials.\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Ilmds_POST",
+        "tags": [
+          "Lots and Serials"
+        ],
+        "operationId": "Ilmds_POST",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/ilmdsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ilmd data matching criteria",
+            "schema": {
+              "$ref": "#/definitions/ilmds"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/epcs/{epc_id}/trace": {
+      "get": {
+        "description": "Retrieve a consumer trace for a specific lot, serial, or pallet\n\nEPC's may be encountered more than once in a Trace API call return. In order to reduce the return size, duplicate EPC's are marked as `\"abbreviated\": true` and only one is expanded.\n\nDepth is a zero-based index for the number of recursive queries required to build a trace. The initial query (depth 0) looks for all events where the traced EPC ID exists as a parent, child, input, or output. The returned asset IDs and EPC IDs are inserted into the trace at the first level. The next query (depth 1) then takes all returned EPC IDs from the previous query and searches for them as parents, children, inputs, and outputs. These asset IDs and EPC IDs are inserted into the trace at the next level. This process continues until either the depth is reached or there is no more data returned by the query.\n\nThe Trace API has a default depth of 5, and there is no upper limit on the depth value that can be specified. However, if a trace exceeds 500,000 contained EPC IDs, an error is returned and a lower depth should be specified on the next request. The EPC (epc_id) endpoints have a depth of 5, which cannot be changed.\n\nA trace level may consist of any of these events:\n1. The transformation from one EPC to another (inputs to outputs)\n2. One or more child EPCs being aggregated into a parent\n3. One parent being disaggregated into one or more children EPCs\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "retrieve a trace for a specific lot, serial, or pallet",
+        "tags": [
+          "EPCs"
+        ],
+        "operationId": "retrieveatraceforaspecificlot,serial,orpallet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "epc_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "EPC of lot, serial, pallet, or GRAI to trace"
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "restrict the EPC's on the first trace level to any of the GS1 GTINs (numeric) or IBM Food Trust Product Identifiers (URN) provided. All subsequent trace levels will not be restricted by this parameter."
+          },
+          {
+            "name": "depth",
+            "in": "query",
+            "required": false,
+            "default": 5,
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1.0,
+            "maximum": 10.0,
+            "exclusiveMaximum": false,
+            "exclusiveMinimum": false,
+            "description": "number of steps to traverse"
+          },
+          {
+            "name": "upstream",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "whether or not to trace upstream"
+          },
+          {
+            "name": "downstream",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "whether or not to trace downstream"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/EpcsTraceResponse"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieve a consumer trace for a specific lot, serial, or pallet\n\nEPC's may be encountered more than once in a Trace API call return. In order to reduce the return size, duplicate EPC's are marked as `\"abbreviated\": true` and only one is expanded.\n\nDepth is a zero-based index for the number of recursive queries required to build a trace. The initial query (depth 0) looks for all events where the traced EPC ID exists as a parent, child, input, or output. The returned asset IDs and EPC IDs are inserted into the trace at the first level. The next query (depth 1) then takes all returned EPC IDs from the previous query and searches for them as parents, children, inputs, and outputs. These asset IDs and EPC IDs are inserted into the trace at the next level. This process continues until either the depth is reached or there is no more data returned by the query.\n\nThe Trace API has a default depth of 5, and there is no upper limit on the depth value that can be specified. However, if a trace exceeds 500,000 contained EPC IDs, an error is returned and a lower depth should be specified on the next request. The EPC (epc_id) endpoints have a depth of 5, which cannot be changed.\n\nA trace level may consist of any of these events:\n1. The transformation from one EPC to another (inputs to outputs)\n2. One or more child EPCs being aggregated into a parent\n3. One parent being disaggregated into one or more children EPCs\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "retrieve a trace for a specific lot, serial, or pallet",
+        "tags": [
+          "EPCs"
+        ],
+        "operationId": "Postretrieveatraceforaspecificlot,serial,orpallet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Required request body for restricting results.  epc_id is required and all other properties are optional",
+            "schema": {
+              "$ref": "#/definitions/EpcsTraceRequest"
+            }
+          },
+          {
+            "name": "epc_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/EpcsTraceResponse"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/epcs/{epc_id}/trace/consumer": {
+      "get": {
+        "description": "This endpoint combines information from /trace (with `depth` value of 5), /products, /locations, /payloads, /events, /lots_and_serials endpoints and returns the information in a single response.  The number of records returned is determined by the default value from the `limit` parameter of the corresponding endpoint.<br><br>Payloads are limited to those that specify epc id and/or event id values returned by the corresponding trace.  Use the /payloads endpoint for more granular payloads queries.</br></br>\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "retrieve a consumer trace for a specific lot, serial, or pallet",
+        "tags": [
+          "EPCs"
+        ],
+        "operationId": "retrieveaconsumertraceforaspecificlot,serial,orpallet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "epc_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "EPC of lot, serial, pallet or GRAI to trace"
+          },
+          {
+            "name": "include_events",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "whether or not to include events in the return"
+          },
+          {
+            "name": "include_products",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "whether or not to include Products in the return"
+          },
+          {
+            "name": "include_lots_and_serials",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "whether or not to include LotsAndSerials in the return"
+          },
+          {
+            "name": "include_locations",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "whether or not to include Locations in the return"
+          },
+          {
+            "name": "include_trace",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "whether or not to include Trace in the return"
+          },
+          {
+            "name": "include_payloads",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "whether or not to include Payloads in the return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/consumerTrace"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "This endpoint combines information from /trace (with `depth` value of 5), /products, /locations, /payloads, /events, /lots_and_serials endpoints and returns the information in a single response.  The number of records returned is determined by the default value from the `limit` parameter of the corresponding endpoint.<br><br>Payloads are limited to those that specify epc id and/or event id values returned by the corresponding trace.  Use the /payloads endpoint for more granular payloads queries.</br></br>\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "retrieve a consumer trace for a specific lot, serial, or pallet",
+        "tags": [
+          "EPCs"
+        ],
+        "operationId": "Postretrieveaconsumertraceforaspecificlot,serial,orpallet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Required request body for restricting results.  epc_id is required and all other properties are optional",
+            "schema": {
+              "$ref": "#/definitions/EpcsTraceConsumerRequest"
+            }
+          },
+          {
+            "name": "epc_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/consumerTrace"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/transactions/purchase_orders": {
+      "get": {
+        "description": "Retrieves purchase order information\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Retrieves purchase order information",
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "Retrievespurchaseorderinformation",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "transaction_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "order_type_code[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "document_action_code[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "line_item_referenced_order_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "ship_to_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "ship_from_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "is_return_order",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": ""
+          },
+          {
+            "name": "creation_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "creation_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "default": 0.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/purchaseOrders"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves purchase order information\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Retrieves purchase order information",
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "PostRetrievespurchaseorderinformation",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/purchaseOrderPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/purchaseOrders"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/transactions/despatch_advices": {
+      "get": {
+        "description": "Retrieves despatch advice information\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Retrieves despatch advice information",
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "Retrievesdespatchadviceinformation",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "transaction_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "purchase_order_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "invoice_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "logistic_unit_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "bill_of_lading_number[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "transport_means_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "ship_to_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "ship_from_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "consignee_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "creation_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "creation_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/despatchAdvices"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves despatch advice information\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Retrieves despatch advice information",
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "PostRetrievesdespatchadviceinformation",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/despatchAdvicesPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/despatchAdvices"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/transactions/receive_advices": {
+      "get": {
+        "description": "Retrieves receive advice information\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Retrieves receive advice information",
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "Retrievesreceiveadviceinformation",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "transaction_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "purchase_order_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "despatch_advice_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "logistic_unit_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "ship_to_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "ship_from_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "transport_means_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "bill_of_lading_number[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "creation_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "creation_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/receiveAdvices"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves receive advice information\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Retrieves receive advice information",
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "PostRetrievesreceiveadviceinformation",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/receiveAdvicesPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/receiveAdvices"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/transactions/invoices": {
+      "get": {
+        "description": "Retrieves invoice information\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Retrieves invoice information",
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "Retrievesinvoiceinformation",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "transaction_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "type[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "purchase_order_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "despatch_advice_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "buyer_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "seller_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "payer_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "payee_location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "creation_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "creation_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/invoices"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves invoice information\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Retrieves invoice information",
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "PostRetrievesinvoiceinformation",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/invoicesPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/invoices"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/organizations": {
+      "get": {
+        "description": "Retrieves information for organizations.  If only organization ID or name is provided, the response will only contain ID and name information.  If only limit and/or start query parameter is provided, the response will be an empty list.\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "Organizations_GET",
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_GET",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "org_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": ""
+          },
+          {
+            "name": "org_name[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "company_prefix[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "epc_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/organizations"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Retrieves information for organizations.  If only organization ID or name is provided, the response will only contain ID and name information.  If only limit and/or start query parameter is provided, the response will be an empty list.\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "Organizations_POST",
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "Organizations_POST",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/organizationsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/organizations"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/sources": {
+      "get": {
+        "description": "This endpoint allows the retrieval of source materials that were ingested to create assets. If an asset does not have a source, a null value will be returned in the hash field.\n\nArray parameters can contain a maximum number of 30 items\n",
+        "summary": "retrieve source material",
+        "tags": [
+          "Sources"
+        ],
+        "operationId": "retrievesourcematerial",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "asset_id[]",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/sources"
+            },
+            "headers": {}
+          }
+        }
+      },
+      "post": {
+        "description": "This endpoint allows the retrieval of source materials that were ingested to create assets. If an asset does not have a source, a null value will be returned in the hash field.\n\nrequest body array properties can contain a maximum number of 200 items\n",
+        "summary": "retrieve source material",
+        "tags": [
+          "Sources"
+        ],
+        "operationId": "Postretrievesourcematerial",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "description": "Optional request body for restricting results.  All properties are optional",
+            "schema": {
+              "$ref": "#/definitions/sourcesPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/sources"
+            },
+            "headers": {}
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "epcQty": {
+      "title": "epcQty",
+      "type": "object",
+      "properties": {
+        "epc_id": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double"
+        },
+        "uom": {
+          "type": "string"
+        }
+      }
+    },
+    "products": {
+      "title": "products",
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/product"
+          }
+        },
+        "next": {
+          "$ref": "#/definitions/next"
+        }
+      }
+    },
+    "product": {
+      "title": "product",
+      "example": {
+        "id": "urn:ibm:ift:product:class:0088672.beef",
+        "org_id": "string",
+        "description": "Demo: fresh beef",
+        "object_sku": "O123456A8CD"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "object_sku": {
+          "type": "string"
+        }
+      }
+    },
+    "locations": {
+      "title": "locations",
+      "type": "object",
+      "properties": {
+        "locations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/location"
+          }
+        },
+        "next": {
+          "$ref": "#/definitions/next"
+        }
+      }
+    },
+    "location": {
+      "title": "location",
+      "example": {
+        "id": "urn:ibm:ift:location:loc:0715756.0002195",
+        "org_id": "string",
+        "party_role_code": "FARM",
+        "party_name": "Lyman Orchards",
+        "street_address": "123 Main Street",
+        "city": "Middlefield",
+        "country_code": "US",
+        "po_box_number": "null",
+        "postal_code": "06455",
+        "state": "CT",
+        "latitude": 0,
+        "longitude": 0
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "party_role_code": {
+          "type": "string"
+        },
+        "street_address": {
+          "type": "string"
+        },
+        "party_name": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "po_box_number": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "lotsSerials": {
+      "title": "lotsSerials",
+      "type": "object",
+      "properties": {
+        "lots_and_serials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/lotSerial"
+          }
+        }
+      }
+    },
+    "lotSerial": {
+      "title": "lotSerial",
+      "example": {
+        "id": "string",
+        "product_id": "urn:ibm:ift:product:class:5364820737684.rojk"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        }
+      }
+    },
+    "ilmds": {
+      "title": "ilmds",
+      "type": "object",
+      "properties": {
+        "ilmds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ilmd"
+          }
+        }
+      }
+    },
+    "ilmd": {
+      "title": "ilmd",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "additional_trade_item_identification": {
+          "type": "string"
+        },
+        "additional_trade_item_identification_type": {
+          "type": "string"
+        },
+        "lot_number": {
+          "type": "string"
+        },
+        "functional_name": {
+          "type": "string"
+        },
+        "regulated_product_name": {
+          "type": "string"
+        },
+        "trade_item_description": {
+          "type": "string"
+        },
+        "strength_description": {
+          "type": "string"
+        },
+        "net_content_description": {
+          "type": "string"
+        },
+        "description_short": {
+          "type": "string"
+        },
+        "label_description": {
+          "type": "string"
+        },
+        "drained_weight": {
+          "type": "string"
+        },
+        "drained_weight_uom": {
+          "type": "string"
+        },
+        "gross_weight": {
+          "type": "string"
+        },
+        "gross_weight_uom": {
+          "type": "string"
+        },
+        "net_weight": {
+          "type": "string"
+        },
+        "net_weight_uom": {
+          "type": "string"
+        },
+        "manufacturer_of_trade_item_party_name": {
+          "type": "string"
+        },
+        "country_of_origin": {
+          "type": "string"
+        },
+        "sell_by_date": {
+          "type": "string"
+        },
+        "first_freeze_date": {
+          "type": "string"
+        },
+        "item_expiration_date": {
+          "type": "string"
+        },
+        "best_before_date": {
+          "type": "string"
+        },
+        "harvest_start_date": {
+          "type": "string"
+        },
+        "harvest_end_date": {
+          "type": "string"
+        },
+        "farm_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/farm"
+          }
+        },
+        "growing_method_code": {
+          "type": "string"
+        },
+        "production_method_for_fish_and_seafood": {
+          "type": "string"
+        },
+        "unloading_port": {
+          "type": "string"
+        },
+        "vessel_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/vessel"
+          }
+        }
+      }
+    },
+    "farm": {
+      "title": "farm",
+      "type": "object",
+      "properties": {
+        "identification": {
+          "type": "string"
+        },
+        "identification_type": {
+          "type": "string"
+        }
+      }
+    },
+    "vessel": {
+      "title": "vessel",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "payloads": {
+      "title": "payloads",
+      "type": "object",
+      "properties": {
+        "payloads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/payload"
+          }
+        },
+        "next": {
+          "$ref": "#/definitions/next"
+        }
+      }
+    },
+    "payload": {
+      "title": "payload",
+      "example": {
+        "id": "string",
+        "payload_type_uri": "string",
+        "payload_timestamp": "2019-03-13T14:52:48.350Z",
+        "payload_content_type": "string",
+        "event_ids": [
+          "string"
+        ],
+        "epc_ids": [
+          "string"
+        ],
+        "product_ids": [
+          "string"
+        ],
+        "location_ids": [
+          "string"
+        ],
+        "sub_location_ids": [
+          "string"
+        ],
+        "payload": "string"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "payload_type_uri": {
+          "type": "string"
+        },
+        "payload_timestamp": {
+          "type": "string"
+        },
+        "payload_content_type": {
+          "type": "string"
+        },
+        "event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "epc_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sub_location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "payload": {
+          "type": "string"
+        }
+      }
+    },
+    "events": {
+      "title": "events",
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/event"
+          }
+        },
+        "next": {
+          "$ref": "#/definitions/next"
+        }
+      }
+    },
+    "event": {
+      "title": "event",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        },
+        "event_type": {
+          "description": "observation, transformation, aggregation, disaggregation, commission, decommission,",
+          "example": "aggregation",
+          "type": "string"
+        },
+        "event_time": {
+          "type": "string"
+        },
+        "transformation_id": {
+          "type": "string"
+        },
+        "biz_step": {
+          "type": "string"
+        },
+        "disposition": {
+          "type": "string"
+        },
+        "read_point_location_id": {
+          "type": "string"
+        },
+        "read_point_sub_location_id": {
+          "type": "string"
+        },
+        "biz_location_id": {
+          "type": "string"
+        },
+        "biz_sub_location_id": {
+          "type": "string"
+        },
+        "epc_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parent_epc_id": {
+          "description": "applies to aggregation and disaggregation events",
+          "type": "string"
+        },
+        "child_epc_ids": {
+          "description": "applies to aggregation and disaggregation events",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "quantities": {
+          "description": "applies to object events",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/epcQty"
+          }
+        },
+        "child_quantities": {
+          "description": "applies to aggregation and disaggregation events",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/epcQty"
+          }
+        },
+        "input_epc_ids": {
+          "description": "applies to transformation events",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "input_quantities": {
+          "description": "applies to transformation events",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/epcQty"
+          }
+        },
+        "output_epc_ids": {
+          "description": "applies to transformation events",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "output_quantities": {
+          "description": "applies to transformation events",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/epcQty"
+          }
+        },
+        "source_location_ids": {
+          "description": "list of source GLNs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_sub_location_ids": {
+          "description": "list of source SGLNs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "destination_location_ids": {
+          "description": "list of destination GLNs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "destination_sub_location_ids": {
+          "description": "list of destination SGLNs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_locations": {
+          "description": "list of source GLNs and types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          }
+        },
+        "source_sub_locations": {
+          "description": "list of source SGLNs and types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          }
+        },
+        "destination_locations": {
+          "description": "list of destination GLNs and types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          }
+        },
+        "destination_sub_locations": {
+          "description": "list of destination SGLNs and types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          }
+        },
+        "transaction_ids": {
+          "description": "list of business transaction identifiers and corresponding business transaction type identifier",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/transactionIds"
+          }
+        }
+      }
+    },
+    "next": {
+      "title": "next",
+      "example": {
+        "href": "http://food.ibm.com/ift/api/outbound/v2/PATH?&start=TOKEN"
+      },
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string"
+        }
+      }
+    },
+    "trace": {
+      "title": "trace",
+      "type": "object",
+      "properties": {
+        "epc_id": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/traceEvent"
+          }
+        },
+        "output_epcs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/innerTrace"
+          }
+        },
+        "input_epcs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/innerTrace"
+          }
+        },
+        "parent_epcs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/innerTrace"
+          }
+        },
+        "child_epcs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/innerTrace"
+          }
+        }
+      }
+    },
+    "innerTrace": {
+      "title": "innerTrace",
+      "type": "object",
+      "properties": {
+        "epc_id": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "output_epcs": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "input_epcs": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "parent_epcs": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "child_epcs": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "consumerTrace": {
+      "title": "consumerTrace",
+      "type": "object",
+      "properties": {
+        "trace": {
+          "$ref": "#/definitions/trace"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/event"
+          }
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/product"
+          }
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/location"
+          }
+        },
+        "lots_and_serials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/lotSerial"
+          }
+        },
+        "payloads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/payload"
+          }
+        }
+      }
+    },
+    "traceEvent": {
+      "title": "traceEvent",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        }
+      }
+    },
+    "purchaseOrders": {
+      "title": "purchaseOrders",
+      "type": "object",
+      "properties": {
+        "purchase_orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/purchaseOrder"
+          }
+        }
+      }
+    },
+    "purchaseOrder": {
+      "title": "purchaseOrder",
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "string"
+        },
+        "asset_id": {
+          "type": "string"
+        },
+        "creation_timestamp": {
+          "type": "string"
+        },
+        "document_action_code": {
+          "type": "string"
+        },
+        "order_type_code": {
+          "type": "string"
+        },
+        "requested_delivery_date": {
+          "type": "string"
+        },
+        "note": {
+          "$ref": "#/definitions/Note"
+        },
+        "buyer_location_id": {
+          "type": "string"
+        },
+        "seller_location_id": {
+          "type": "string"
+        },
+        "ship_from_location_id": {
+          "type": "string"
+        },
+        "ship_to_location_id": {
+          "type": "string"
+        },
+        "line_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/po_line_items"
+          }
+        },
+        "referenced_orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/referenced_order"
+          }
+        },
+        "latest_delivery_date": {
+          "type": "string"
+        }
+      }
+    },
+    "po_line_items": {
+      "title": "po_line_items",
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string"
+        },
+        "line_item_number": {
+          "type": "number",
+          "format": "double"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double"
+        },
+        "uom": {
+          "type": "string"
+        },
+        "net_price": {
+          "$ref": "#/definitions/NetPrice"
+        },
+        "item_price_base_quantity": {
+          "$ref": "#/definitions/ItemPriceBaseQuantity"
+        },
+        "latest_delivery_date": {
+          "type": "string"
+        },
+        "referenced_order": {
+          "$ref": "#/definitions/referenced_order"
+        }
+      }
+    },
+    "referenced_order": {
+      "title": "referenced_order",
+      "type": "object",
+      "properties": {
+        "purchase_order_id": {
+          "type": "string"
+        },
+        "relationship": {
+          "type": "string"
+        },
+        "line_item_number": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "despatchAdvices": {
+      "title": "despatchAdvices",
+      "type": "object",
+      "properties": {
+        "despatch_advices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/despatchAdvice"
+          }
+        }
+      }
+    },
+    "despatchAdvice": {
+      "title": "despatchAdvice",
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "string"
+        },
+        "asset_id": {
+          "type": "string"
+        },
+        "creation_timestamp": {
+          "type": "string"
+        },
+        "actual_ship_timestamp": {
+          "type": "string"
+        },
+        "purchase_order_id": {
+          "type": "string"
+        },
+        "invoice_id": {
+          "type": "string"
+        },
+        "shipper_location_id": {
+          "type": "string"
+        },
+        "receiver_location_id": {
+          "type": "string"
+        },
+        "ship_from_location_id": {
+          "type": "string"
+        },
+        "ship_to_location_id": {
+          "type": "string"
+        },
+        "consignee_location_id": {
+          "type": "string"
+        },
+        "transport_information": {
+          "$ref": "#/definitions/TransportInformation"
+        },
+        "logistic_units": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/da_logistic_units"
+          }
+        }
+      }
+    },
+    "da_logistic_units": {
+      "title": "da_logistic_units",
+      "type": "object",
+      "properties": {
+        "estimated_delivery_timestamp_at_consignee": {
+          "type": "string"
+        },
+        "logistic_unit_identification": {
+          "$ref": "#/definitions/logistic_unit_identification"
+        },
+        "package_type_code": {
+          "type": "string"
+        },
+        "line_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/da_line_items"
+          }
+        }
+      }
+    },
+    "logistic_unit_identification": {
+      "title": "logistic_unit_identification",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "da_line_items": {
+      "title": "da_line_items",
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string"
+        },
+        "trade_item": {
+          "$ref": "#/definitions/da_trade_item"
+        },
+        "line_item_number": {
+          "type": "number",
+          "format": "double"
+        },
+        "country_of_origin": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double"
+        },
+        "uom": {
+          "type": "string"
+        },
+        "requested_product_id": {
+          "type": "string"
+        },
+        "purchase_order": {
+          "$ref": "#/definitions/da_logistic_units_po"
+        }
+      }
+    },
+    "da_trade_item": {
+      "title": "da_trade_item",
+      "type": "object",
+      "properties": {
+        "item_data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemDatum"
+          }
+        }
+      }
+    },
+    "da_logistic_units_po": {
+      "title": "da_logistic_units_po",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "line_item_number": {
+          "type": "number",
+          "format": "double"
+        },
+        "creation_timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "receiveAdvices": {
+      "title": "receiveAdvices",
+      "type": "object",
+      "properties": {
+        "receive_advices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/receiveAdvice"
+          }
+        }
+      }
+    },
+    "receiveAdvice": {
+      "title": "receiveAdvice",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object"
+        },
+        "transaction_id": {
+          "type": "string"
+        },
+        "asset_id": {
+          "type": "string"
+        },
+        "despatch_advice_id": {
+          "type": "string"
+        },
+        "creation_timestamp": {
+          "type": "string"
+        },
+        "receiving_timestamp": {
+          "type": "string"
+        },
+        "shipper_location_id": {
+          "type": "string"
+        },
+        "receiver_location_id": {
+          "type": "string"
+        },
+        "ship_to_location_id": {
+          "type": "string"
+        },
+        "transport_information": {
+          "$ref": "#/definitions/TransportInformation1"
+        },
+        "logistic_units": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ra_logistic_units"
+          }
+        },
+        "bill_of_lading_number": {
+          "type": "string"
+        }
+      }
+    },
+    "ra_logistic_units": {
+      "title": "ra_logistic_units",
+      "type": "object",
+      "properties": {
+        "line_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ra_line_items"
+          }
+        },
+        "unit_id": {
+          "$ref": "#/definitions/ra_unit_id"
+        },
+        "package_type_code": {
+          "type": "string"
+        }
+      }
+    },
+    "ra_line_items": {
+      "title": "ra_line_items",
+      "type": "object",
+      "properties": {
+        "received_uom": {
+          "type": "string"
+        },
+        "requested_product_id": {
+          "type": "string"
+        },
+        "accepted_quantity": {
+          "type": "number",
+          "format": "double"
+        },
+        "receiving_condition": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ra_line_items_condition"
+          }
+        },
+        "received_quantity": {
+          "type": "number",
+          "format": "double"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "accepted_uom": {
+          "type": "string"
+        },
+        "despatch_advice": {
+          "$ref": "#/definitions/ra_line_items_da"
+        },
+        "line_item_number": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ra_line_items_condition": {
+      "title": "ra_line_items_condition",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "ra_line_items_da": {
+      "title": "ra_line_items_da",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "line_item_number": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ra_unit_id": {
+      "title": "ra_unit_id",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "errorModel": {
+      "title": "errorModel",
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "transactionIds": {
+      "title": "transactionIds",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "sources": {
+      "title": "sources",
+      "type": "object",
+      "properties": {
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AssetId"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Sources1"
+          }
+        }
+      }
+    },
+    "organizations": {
+      "title": "organizations",
+      "type": "object",
+      "properties": {
+        "organizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/organization"
+          }
+        }
+      }
+    },
+    "organization": {
+      "title": "organization",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "company_prefix": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "epc_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "invoices": {
+      "title": "invoices",
+      "type": "object",
+      "properties": {
+        "invoices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/invoice"
+          }
+        }
+      }
+    },
+    "invoice": {
+      "title": "invoice",
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "string"
+        },
+        "asset_id": {
+          "type": "string"
+        },
+        "creation_timestamp": {
+          "type": "string"
+        },
+        "buyer_location_id": {
+          "type": "string"
+        },
+        "seller_location_id": {
+          "type": "string"
+        },
+        "payer_location_id": {
+          "type": "string"
+        },
+        "payee_location_id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "totals": {
+          "$ref": "#/definitions/Totals"
+        },
+        "delivery_terms": {
+          "$ref": "#/definitions/DeliveryTerms"
+        },
+        "line_items": {
+          "$ref": "#/definitions/LineItems"
+        },
+        "levied_duty_fee_tax": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LeviedDutyFeeTax"
+          }
+        },
+        "item_price_exclusive_allowances_charges": {
+          "$ref": "#/definitions/ItemPriceExclusiveAllowancesCharges"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
+        "purchase_order": {
+          "$ref": "#/definitions/da_logistic_units_po"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "item_price_base_quantity": {
+          "$ref": "#/definitions/ItemPriceBaseQuantity1"
+        },
+        "despatch_advice": {
+          "$ref": "#/definitions/ra_line_items_da"
+        },
+        "line_item_number": {
+          "type": "number",
+          "format": "double"
+        },
+        "invoiced_quantity": {
+          "$ref": "#/definitions/InvoicedQuantity"
+        }
+      }
+    },
+    "eventsPostRequest": {
+      "title": "eventsPostRequest",
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "asset_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "epc_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parent_epc_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "event_type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "biz_transaction_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "biz_transaction_type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "biz_step": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "event_start_timestamp": {
+          "type": "string"
+        },
+        "event_end_timestamp": {
+          "type": "string"
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "productsPostRequest": {
+      "title": "productsPostRequest",
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "lot_or_serial_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "locationsPostRequest": {
+      "title": "locationsPostRequest",
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "party_role_code": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "payloadsPostRequest": {
+      "title": "payloadsPostRequest",
+      "type": "object",
+      "properties": {
+        "payload_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "epc_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "org_id": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "event_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "payload_type_uri": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "payload_start_timestamp": {
+          "type": "string"
+        },
+        "payload_end_timestamp": {
+          "type": "string"
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "lotsAndSerialsPostRequest": {
+      "title": "lotsAndSerialsPostRequest",
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lot_or_serial_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "event_start_timestamp": {
+          "type": "string"
+        },
+        "event_end_timestamp": {
+          "type": "string"
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "ilmdsPostRequest": {
+      "title": "ilmdsPostRequest",
+      "type": "object",
+      "properties": {
+        "lot_or_serial_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "best_before_date_start_timestamp": {
+          "type": "string"
+        },
+        "best_before_date_end_timestamp": {
+          "type": "string"
+        },
+        "first_freeze_date_start_timestamp": {
+          "type": "string"
+        },
+        "first_freeze_date_end_timestamp": {
+          "type": "string"
+        },
+        "harvest_start_date_start_timestamp": {
+          "type": "string"
+        },
+        "harvest_start_date_end_timestamp": {
+          "type": "string"
+        },
+        "harvest_end_date_start_timestamp": {
+          "type": "string"
+        },
+        "harvest_end_date_end_timestamp": {
+          "type": "string"
+        },
+        "item_expiration_date_start_timestamp": {
+          "type": "string"
+        },
+        "item_expiration_date_end_timestamp": {
+          "type": "string"
+        },
+        "sell_by_date_start_timestamp": {
+          "type": "string"
+        },
+        "sell_by_date_end_timestamp": {
+          "type": "string"
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "purchaseOrderPostRequest": {
+      "title": "purchaseOrderPostRequest",
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "order_type_code": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "document_action_code": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "line_item_referenced_order_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ship_to_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ship_from_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_return_order": {
+          "type": "boolean"
+        },
+        "creation_start_timestamp": {
+          "type": "string"
+        },
+        "creation_end_timestamp": {
+          "type": "string"
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "offset": {
+          "example": 0,
+          "type": "number",
+          "default": 0.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "despatchAdvicesPostRequest": {
+      "title": "despatchAdvicesPostRequest",
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "purchase_order_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "invoice_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "logistic_unit_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bill_of_lading_number": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "transport_means_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ship_to_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ship_from_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "consignee_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "creation_start_timestamp": {
+          "type": "string"
+        },
+        "creation_end_timestamp": {
+          "type": "string"
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "receiveAdvicesPostRequest": {
+      "title": "receiveAdvicesPostRequest",
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "purchase_order_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "despatch_advice_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "logistic_unit_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ship_to_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ship_from_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "transport_means_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bill_of_lading_number": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "creation_start_timestamp": {
+          "type": "string"
+        },
+        "creation_end_timestamp": {
+          "type": "string"
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "invoicesPostRequest": {
+      "title": "invoicesPostRequest",
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "purchase_order_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "despatch_advice_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "buyer_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "seller_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "payer_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "payee_location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "creation_start_timestamp": {
+          "type": "string"
+        },
+        "creation_end_timestamp": {
+          "type": "string"
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "organizationsPostRequest": {
+      "title": "organizationsPostRequest",
+      "type": "object",
+      "properties": {
+        "org_id": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "org_name": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "company_prefix": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "epc_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "example": 500,
+          "type": "number",
+          "default": 500.0,
+          "format": "double"
+        },
+        "start": {
+          "type": "string"
+        }
+      }
+    },
+    "sourcesPostRequest": {
+      "title": "sourcesPostRequest",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "AssetId": {
+      "title": "AssetId",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        }
+      }
+    },
+    "CurrencyExchangeRateInformation": {
+      "title": "CurrencyExchangeRateInformation",
+      "type": "object",
+      "properties": {
+        "conversion_from_code": {
+          "type": "string"
+        },
+        "exchange_rate": {
+          "type": "number",
+          "format": "double"
+        },
+        "conversion_to_code": {
+          "type": "string"
+        }
+      }
+    },
+    "DeliveryTerms": {
+      "title": "DeliveryTerms",
+      "type": "object",
+      "properties": {
+        "incoterms_code": {
+          "type": "string"
+        },
+        "location_id": {
+          "type": "object"
+        },
+        "alternate_terms": {
+          "type": "object"
+        },
+        "cost_payment": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "string"
+        }
+      }
+    },
+    "EpcsTraceConsumerRequest": {
+      "title": "EpcsTraceConsumerRequest",
+      "type": "object",
+      "properties": {
+        "epc_id": {
+          "description": "EPC of lot, serial, pallet, or GRAI to trace",
+          "type": "string"
+        },
+        "include_events": {
+          "description": "whether or not to include events in the return",
+          "example": true,
+          "type": "boolean",
+          "default": true
+        },
+        "include_products": {
+          "description": "whether or not to include Products in the return",
+          "example": true,
+          "type": "boolean",
+          "default": true
+        },
+        "include_lots_and_serials": {
+          "description": "whether or not to include LotsAndSerials in the return",
+          "example": true,
+          "type": "boolean",
+          "default": true
+        },
+        "include_locations": {
+          "description": "whether or not to include Locations in the return",
+          "example": true,
+          "type": "boolean",
+          "default": true
+        },
+        "include_trace": {
+          "description": "whether or not to include Trace in the return",
+          "example": true,
+          "type": "boolean",
+          "default": true
+        },
+        "include_payloads": {
+          "description": "whether or not to include Payloads in the return",
+          "example": true,
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "EpcsTraceRequest": {
+      "title": "EpcsTraceRequest",
+      "type": "object",
+      "properties": {
+        "epc_id": {
+          "description": "EPC of lot, serial, pallet, or GRAI to trace",
+          "type": "string"
+        },
+        "product_id[]": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "depth": {
+          "description": "number of steps to traverse",
+          "example": 5,
+          "type": "integer",
+          "default": 5,
+          "minimum": 1.0,
+          "format": "int32"
+        },
+        "upstream": {
+          "description": "whether or not to trace upstream",
+          "example": true,
+          "type": "boolean",
+          "default": true
+        },
+        "downstream": {
+          "description": "whether or not to trace downstream",
+          "example": true,
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "EpcsTraceResponse": {
+      "title": "EpcsTraceResponse",
+      "type": "object",
+      "properties": {
+        "trace": {
+          "$ref": "#/definitions/trace"
+        }
+      }
+    },
+    "Error": {
+      "title": "Error",
+      "type": "object",
+      "properties": {
+        "code": {
+          "example": "invalid_inputs",
+          "type": "string"
+        },
+        "message": {
+          "example": "Invalid value 10000 provided for input parameter limit. limit must be an integer greater than or equal to 1 and less than or equal to 1000.",
+          "type": "string"
+        },
+        "more_info": {
+          "type": "string"
+        }
+      }
+    },
+    "Extension": {
+      "title": "Extension",
+      "type": "object",
+      "properties": {
+        "currency_exchange_rate_information": {
+          "$ref": "#/definitions/CurrencyExchangeRateInformation"
+        }
+      }
+    },
+    "InvoicedQuantity": {
+      "title": "InvoicedQuantity",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemDatum": {
+      "title": "ItemDatum",
+      "type": "object",
+      "properties": {
+        "item_volume": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemVolume"
+          }
+        },
+        "best_before_timestamp": {
+          "type": "string"
+        },
+        "lot_number": {
+          "type": "string"
+        },
+        "item_weight": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemWeight"
+          }
+        },
+        "batch_number": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemPriceBaseQuantity": {
+      "title": "ItemPriceBaseQuantity",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ItemPriceBaseQuantity1": {
+      "title": "ItemPriceBaseQuantity1",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemPriceExclusiveAllowancesCharges": {
+      "title": "ItemPriceExclusiveAllowancesCharges",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currency_code": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemVolume": {
+      "title": "ItemVolume",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "measurement": {
+          "type": "string"
+        },
+        "measurement_type_code": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemWeight": {
+      "title": "ItemWeight",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "measurement": {
+          "type": "string"
+        },
+        "measurement_type_code": {
+          "type": "string"
+        }
+      }
+    },
+    "LeviedDutyFeeTax": {
+      "title": "LeviedDutyFeeTax",
+      "type": "object",
+      "properties": {
+        "tax_percentage": {
+          "type": "string"
+        },
+        "tax_amount": {
+          "$ref": "#/definitions/TaxAmount"
+        },
+        "tax_type_code": {
+          "type": "string"
+        }
+      }
+    },
+    "LineItems": {
+      "title": "LineItems",
+      "type": "object",
+      "properties": {
+        "ordered_quantity": {
+          "$ref": "#/definitions/OrderedQuantity"
+        }
+      }
+    },
+    "NetPrice": {
+      "title": "NetPrice",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currency_code": {
+          "type": "string"
+        }
+      }
+    },
+    "Note": {
+      "title": "Note",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "language_code": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderedQuantity": {
+      "title": "OrderedQuantity",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        }
+      }
+    },
+    "Sources1": {
+      "title": "Sources1",
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "TaxAmount": {
+      "title": "TaxAmount",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currency_code": {
+          "type": "string"
+        }
+      }
+    },
+    "TaxSubtotal": {
+      "title": "TaxSubtotal",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currency_code": {
+          "type": "string"
+        }
+      }
+    },
+    "Totals": {
+      "title": "Totals",
+      "type": "object",
+      "properties": {
+        "tax_subtotal": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxSubtotal"
+          }
+        }
+      }
+    },
+    "TransportInformation": {
+      "title": "TransportInformation",
+      "type": "object",
+      "properties": {
+        "bill_of_lading_number": {
+          "type": "string"
+        },
+        "transport_means_id": {
+          "type": "string"
+        }
+      }
+    },
+    "TransportInformation1": {
+      "title": "TransportInformation1",
+      "type": "object",
+      "properties": {
+        "transport_means_id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Products",
+      "description": "APIs for products"
+    },
+    {
+      "name": "Locations",
+      "description": "APIs for locations"
+    },
+    {
+      "name": "Payloads",
+      "description": "APIS for payloads"
+    },
+    {
+      "name": "Events",
+      "description": "APIs for events"
+    },
+    {
+      "name": "Lots and Serials",
+      "description": "APIs for lots and serials"
+    },
+    {
+      "name": "EPCs",
+      "description": "APIs for EPCs"
+    },
+    {
+      "name": "Transactions",
+      "description": "APIs for Transactions"
+    },
+    {
+      "name": "Organizations",
+      "description": "APIs for Organizations"
+    },
+    {
+      "name": "Sources",
+      "description": "APIs for sources"
+    }
+  ]
+}
